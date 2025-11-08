@@ -1,2 +1,19 @@
-"venv_utahmountain/" 
+# Security
+venv_utahmountain/ 
 .env
+
+# Python
+__pycache__/
+venv_utahmountain/
+.venv_utahmountain/
+*.env
+*.log
+*.pyc
+*.pyo
+*.pyd
+
+# R / RStudio
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
