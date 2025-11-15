@@ -1,4 +1,4 @@
-rank,mtn_peak,mtn_range,elev_ft,elev_m,prom_ft,prom_m,isol_mi,isol_km,lat,long
+rank,mtn_peak,mtn_range,elev_ft,elev_m,prom_ft,prom_m,isol_mi,isol_km,latitude,longitude
 1,Kings Peak,Uinta Mountains,13534.0,4125.0,6358.0,1938.0,166.6,268.0,40.7763,-110.3729
 2,Mount Peale,La Sal Mountains,12726.0,3879.0,6181.0,1884.0,72.8,117.1,38.4385,-109.2292
 3,Mount Waas,La Sal Mountains,12316.0,3753.8,1793.0,547.0,5.24,8.43,38.5391,-109.2278

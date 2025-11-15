@@ -44,15 +44,14 @@ raw_mtns[num_cols] = raw_mtns[num_cols].astype(float)
 # Change location to decimal long and lat and split into 2 sep cols
 coords = raw_mtns['Location'].str.extract(r'(?P<lat>\d+\.\d+)°?N.*?(?P<lon>\d+\.\d+)°?W')
 
-raw_mtns['lat'] = coords['lat'].astype(float)
-raw_mtns['long'] = -coords['lon'].astype(float)
+raw_mtns['latitude'] = coords['lat'].astype(float)
+raw_mtns['longitude'] = -coords['lon'].astype(float)
 
 # Drop unused columns
 clean_mtns = raw_mtns.drop(['Elevation', 'Prominence', 'Isolation', 'Location'], axis=1)
 
 # Saving clean_mtns as clean_mtns.csv
 clean_mtns.to_csv("Wiki Data/clean_mtns.csv", index=False, encoding='utf-8')
-
 print("=================")
 print("clean_mtns saved!")
 print("=================")

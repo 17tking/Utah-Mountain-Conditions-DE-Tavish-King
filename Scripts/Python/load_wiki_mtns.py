@@ -1,5 +1,6 @@
 import pandas as pd
 import psycopg2
+import psycopg2.extras as extras
 from dotenv import load_dotenv
 import os
 
@@ -8,8 +9,6 @@ import os
 # bronze layer (schema = bronze).
 # ======================================
 clean_mtns = pd.read_csv("Wiki Data/clean_mtns.csv")
-
-
 
 # -----------------
 # Loading into SQL
@@ -27,3 +26,45 @@ cur = conn.cursor()
 print("========================")
 print("Connected to PostgreSQL!")
 print("========================")
+
+# ---------------------------------------------------------
+# Truncate table first to avoid duplicates
+# ---------------------------------------------------------
+try:
+    cur.execute("TRUNCATE TABLE bronze.wiki_mtns;")
+    conn.commit()
+    print("Table truncated successfully.")
+except Exception as e:
+    conn.rollback()
+    print("Error truncating table:", e)
+
+# ---------------------------------
+# Prepping data for execute_values
+# ---------------------------------
+rows = [tuple(row) for row in clean_mtns.to_numpy()]
+columns = ",".join(clean_mtns.columns)
+
+query = f"""
+    insert into bronze.wiki_mtns ({columns})
+    values %s
+"""
+
+# --------------------
+# Execute bulk insert
+# --------------------
+try:
+    extras.execute_values(cur, query, rows)
+    conn.commit()
+    print(f"Inserted {len(clean_mtns)} rows into bronze.wiki_mtns.")
+except Exception as e:
+    conn.rollback()
+    print("- Error inserting rows:", e)
+
+# ---------
+# Clean-up
+# ---------
+cur.close()
+conn.close()
+print("=======")
+print(" Done. ")
+print("=======")
