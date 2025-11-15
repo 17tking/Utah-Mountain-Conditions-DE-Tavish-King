@@ -37,12 +37,14 @@ for row in rows[1:]:
         data.append(cols)
 
 # Create DataFrame
-df_tallest50 = pd.DataFrame(data, columns=headers)
+raw_mtns = pd.DataFrame(data, columns=headers)
 
 # Preview
-print(df_tallest50.head())
+print(raw_mtns.head())
 
 # Save to Raw Data folder in dir
-file_path = os.path.join("Raw Wiki Data", "raw_utah_mountains.csv")
-df_tallest50.to_csv(file_path, index=False, encoding='utf-8')
-print(f"{file_path} saved!")
+file_path = os.path.join("Wiki Data", "raw_mtns.csv")
+raw_mtns.to_csv(file_path, index=False, encoding='utf-8')
+print("===============")
+print("raw_mtns saved!")
+print("===============")

@@ -1,12 +1,9 @@
 import pandas as pd
 import re
 import os
-from dotenv import load_dotenv
-import psycopg2
 
 # ============================================================
-# This script cleans raw_wiki_mountains entirely and loads it 
-# into the PostgreSQL Bronze layer (schema = bronze).
+# This script cleans raw_wiki_mountains entirely.
 #
 # Why?
 # - This data is very messy. It is easier to clean it in python.
@@ -14,7 +11,7 @@ import psycopg2
 # ==============================================================
 
 # read in raw data
-raw_mtns = pd.read_csv("Raw Wiki Data/raw_utah_mountains.csv")
+raw_mtns = pd.read_csv("Wiki Data/raw_mtns.csv")
 
 # ---------------
 # Cleaning Steps
@@ -47,23 +44,15 @@ raw_mtns[num_cols] = raw_mtns[num_cols].astype(float)
 # Change location to decimal long and lat and split into 2 sep cols
 coords = raw_mtns['Location'].str.extract(r'(?P<lat>\d+\.\d+)°?N.*?(?P<lon>\d+\.\d+)°?W')
 
-raw_mtns['latitude'] = coords['lat'].astype(float)
-raw_mtns['longitude'] = -coords['lon'].astype(float)
+raw_mtns['lat'] = coords['lat'].astype(float)
+raw_mtns['long'] = -coords['lon'].astype(float)
 
 # Drop unused columns
 clean_mtns = raw_mtns.drop(['Elevation', 'Prominence', 'Isolation', 'Location'], axis=1)
 
-# -----------------
-# Loading into SQL
-# -----------------
-load_dotenv()
-# PostgreSQL connection info
-conn = psycopg2.connect(
-    dbname=os.getenv('database'),
-    user=os.getenv('user'),
-    password=os.getenv('password'),
-    host=os.getenv('host'),
-    port=os.getenv('port')
-)
-cur = conn.cursor()
-print("Connected to PostgreSQL!")
+# Saving clean_mtns as clean_mtns.csv
+clean_mtns.to_csv("Wiki Data/clean_mtns.csv", index=False, encoding='utf-8')
+
+print("=================")
+print("clean_mtns saved!")
+print("=================")
