@@ -71,6 +71,7 @@ Utah-Mountain-Conditions-DE/
 ```
 
 ## Author
+
 **Tavish King**
 Data Analyst
 Feel free to connect on [LinkedIn](https://www.linkedin.com/in/tavish-king/) or check out more of my work!
