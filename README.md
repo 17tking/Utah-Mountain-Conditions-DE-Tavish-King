@@ -47,6 +47,7 @@ The database follows the **medallion architecture** style. Data is first stored 
 
 ## Repository Structure
 
+```py
 Utah-Mountain-Conditions-DE/
 │
 ├── Wiki Data/                          # Saved CSVs of the top 50 tallest utah mountains table extract from wikipedia 
@@ -67,6 +68,7 @@ Utah-Mountain-Conditions-DE/
 ├── README.md                           # Project overview and details
 ├── .gitignore                          # Private info to be ignored by git
 └── requirements.txt                    # Dependencies and requirements used for the project
+```
 
 ## Author
 **Tavish King**
