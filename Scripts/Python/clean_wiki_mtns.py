@@ -17,6 +17,14 @@ raw_mtns = pd.read_csv("Wiki Data/raw_mtns.csv")
 # Cleaning Steps
 # ---------------
 
+# Adding unique id for each mountain summit
+raw_mtns['mtn_id'] = raw_mtns.index + 1
+raw_mtns['mtn_id'] = raw_mtns['mtn_id'].apply(lambda x: f"{x:03}")
+
+# Move 'mtn_id' to be the first column
+cols = ['mtn_id'] + [c for c in raw_mtns.columns if c != 'mtn_id']
+raw_mtns = raw_mtns[cols]
+
 # Standardizing column names
 raw_mtns = raw_mtns.rename(columns = {'Rank':'rank', 'Mountain peak':'mtn_peak', 'Mountain range':'mtn_range'})
 

@@ -1,5 +1,6 @@
 -- Creating wiki_mtns table in bronze schema
 create table if not exists bronze.wiki_mtns (
+mtn_id VARCHAR(3),
 rank INT,
 mtn_peak VARCHAR(100),
 mtn_range VARCHAR(100),
