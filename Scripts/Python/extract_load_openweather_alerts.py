@@ -6,6 +6,7 @@ from datetime import timezone, datetime
 import time
 import os
 from dotenv import load_dotenv
+from utils import get_summits
 
 # ===============================================================
 # This script extracts daily weather alerts for all summits listed
@@ -15,46 +16,13 @@ from dotenv import load_dotenv
 # as JSONB, ensuring no duplicates via a unique index on (mtn_id,
 # event, start, end). 
 # 
-# The script handles incremental loading (1x daily) and
+# The script also handles incremental loading (1x daily) and
 # timestamps each pull for tracking purposes.
 # ===============================================================
 load_dotenv()
 
 # Open weather api key
 OW_KEY = os.getenv('owkey')
-
-
-# -----------------------------------------
-# Function to retrieve summit coordinates
-# -----------------------------------------
-def get_summits():
-    conn = psycopg2.connect(
-        dbname=os.getenv('database'),
-        user=os.getenv('user'),
-        password=os.getenv('password'),
-        host=os.getenv('host'),
-        port=os.getenv('port')
-)
-    cur = conn.cursor()
-
-    query = """
-        select mtn_id, latitude, longitude
-        from bronze.wiki_mtns
-        where latitude is not null
-            and longitude is not null
-    """
-
-    cur.execute(query)
-    rows = cur.fetchall()
-
-    cur.close()
-    conn.close()
-
-    return [
-        {"mtn_id": r[0], "latitude": float(r[1]), "longitude": float(r[2])}
-        for r in rows
-    ]
-
 
 # ------------
 # API Caller
@@ -75,7 +43,6 @@ def fetch_alerts(latitude, longitude):
     
     alerts = alert_data.get("alerts") or []
     return alerts
-
 
 # -----------------------------
 # Loops through all 50 summits
@@ -102,10 +69,10 @@ def extract_all_summits():
 
     return results
 
-
 # -----------------------------------------
 # Loading raw json alert data to postgreSQL
 # -----------------------------------------
+
 def load_alerts_to_postgres(results):
     if not results:
         print("No alerts to load.")
@@ -121,7 +88,7 @@ def load_alerts_to_postgres(results):
     cur = conn.cursor()
 
     insert_alerts_query = """
-        insert into bronze.alerts (mtn_id, latitude, longitude, pulled_at, alert)
+        insert into bronze.openweather_alerts (mtn_id, latitude, longitude, pulled_at, alert)
         values %s
         on conflict do nothing;
 """
@@ -141,7 +108,7 @@ def load_alerts_to_postgres(results):
     try:
         execute_values(cur, insert_alerts_query, values)
         conn.commit()
-        print(f"Inserted {cur.rowcount} new alerts into bronze.alerts")
+        print(f"Sick! {cur.rowcount} new alerts inserted into bronze.openweather_alerts")
     except Exception as e:
         conn.rollback()
         print(f"Error inserting alerts: {e}")
@@ -154,9 +121,15 @@ def load_alerts_to_postgres(results):
 # Main
 # -------
 if __name__ == "__main__":
+    start_time = time.time()
+    print("=" * 50)
+    print(f">> Extracting Alert data from OpenWeather...")
+    print("=" * 50)
     results = extract_all_summits()
-    print("============================================")
-    print(f"Fetched {len(results)} alerts.")
-    print("============================================")
+    print("=" * 50)
+    print(f">> Fetched {len(results)} alerts.")
+    print("=" * 50)
     load_alerts_to_postgres(results)
-    print("============================================")
+    print("=" * 50)
+    end_time = time.time()
+    print(f">> Load Duration: {round(end_time - start_time, 2)} secs")

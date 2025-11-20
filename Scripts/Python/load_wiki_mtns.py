@@ -55,7 +55,7 @@ query = f"""
 try:
     extras.execute_values(cur, query, rows)
     conn.commit()
-    print(f"Inserted {len(clean_mtns)} rows into bronze.wiki_mtns.")
+    print(f"Hallelujah! {len(clean_mtns)} rows inserted into bronze.wiki_mtns.")
 except Exception as e:
     conn.rollback()
     print("- Error inserting rows:", e)
