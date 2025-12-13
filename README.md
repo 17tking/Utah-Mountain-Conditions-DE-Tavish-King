@@ -1,5 +1,5 @@
 ![Kings Peak](Docs/Kings.Peak.jpg)
-*A photo I took of King's Peak wayyyy in the center background. This is Utah's tallest mountain standing at an elevation of 4125m!*
+*A photo I took of King's Peak wayyyy in the center background. This is Utah's tallest mountain standing at an elevation of 4125m (13,528ft)!*
 
 
 ## Welcome!
@@ -73,7 +73,9 @@ Utah-Mountain-Conditions-DE/
 ## Author
 
 **Tavish King**
+
 Data Analyst
+
 Feel free to connect on [LinkedIn](https://www.linkedin.com/in/tavish-king/) or check out more of my work!
 
 

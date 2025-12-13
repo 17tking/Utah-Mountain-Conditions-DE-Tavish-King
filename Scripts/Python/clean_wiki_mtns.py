@@ -56,7 +56,7 @@ raw_mtns['latitude'] = coords['lat'].astype(float)
 raw_mtns['longitude'] = -coords['lon'].astype(float)
 
 # Drop unused columns
-clean_mtns = raw_mtns.drop(['Elevation', 'Prominence', 'Isolation', 'Location'], axis=1)
+clean_mtns = raw_mtns.drop(['rank', 'Elevation', 'Prominence', 'Isolation', 'Location'], axis=1)
 
 # Saving clean_mtns as clean_mtns.csv
 clean_mtns.to_csv("Wiki Data/clean_mtns.csv", index=False, encoding='utf-8')

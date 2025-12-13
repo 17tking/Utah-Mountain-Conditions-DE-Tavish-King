@@ -25,7 +25,6 @@ drop table if exists bronze.wiki_mtns;
 
 create table bronze.wiki_mtns (
 mtn_id VARCHAR(3),
-rank INT,
 mtn_peak VARCHAR(100),
 mtn_range VARCHAR(100),
 elev_ft INT,
