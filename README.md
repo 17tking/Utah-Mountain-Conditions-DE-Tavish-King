@@ -10,10 +10,10 @@ This project showcases the movement of data from online sources to visual dashbo
 Let me first walk you through the flow of this project and its end goal...
 
 
-### Pipeline Mechanics
+### Data Flow
 xxxxxxx.
 
-### Incremental Loading
+### Incremental Logic
 xxxxxxx.
 
 ### Local Automation: Windows Task Scheduler
@@ -53,17 +53,16 @@ Utah-Mountain-Conditions-DE/
 ├── Wiki Data/                          # Saved CSVs of the top 50 tallest utah mountains table extract from wikipedia 
 │
 ├── Docs/                               # Project documentation and architecture details
-│   ├── Kings.Peak.jpg                  # 
-│   ├── DWH Layers.png                  # 
-│   ├── Data Flow.png                   # 
-│   ├── Data Sources.doc                # 
-│   ├── Naming Conventions.doc          # 
-│   ├── Project Goals.doc               # 
+│   ├── Kings.Peak.jpg                  # Project photo
+│   ├── DWH Layers.png                  # Diagram showing the medallion architecture used for this project
+│   ├── Data Flow.png                   # Diagram showing the flow of data
+│   ├── Data Sources.doc                # Doc listing the data sources used with URLs 
+│   ├── Project Goals.doc               # Personal learning goals for this project
 │
 ├── Scripts/                            # Scripts for ETL/ELT processes and analyses
-│   ├── Python                          # 
-│   ├── SQL                             # 
-│   ├── R                               # 
+│   ├── Python                          # Python scripts
+│   ├── SQL                             # SQL scripts
+│   ├── R                               # R scripts
 |
 ├── README.md                           # Project overview and details
 ├── .gitignore                          # Private info to be ignored by git
@@ -74,7 +73,7 @@ Utah-Mountain-Conditions-DE/
 
 **Tavish King**
 
-Data Analyst
+Data Analyst/Jr. Data Engineer
 
 Feel free to connect on [LinkedIn](https://www.linkedin.com/in/tavish-king/) or check out more of my work!
 
