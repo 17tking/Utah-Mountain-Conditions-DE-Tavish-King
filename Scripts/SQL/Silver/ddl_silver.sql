@@ -3,10 +3,15 @@
 DDL Script: Create Silver Tables
 =============================================================
 Script Purpose:
-		This script creates silver layer tables. All tables are
-		in 3rd normal form (3NF)...
-Note: 
- 		Specific variable constraints are used...
+		The Silver layer stores cleaned, normalized, and validated 
+		data extracted from the Bronze raw tables. All tables are 
+		designed in 3rd Normal Form (3NF) to eliminate redundancy 
+		and ensure data integrity.
+Notes:
+    - Each table includes specific constraints to enforce
+    - Tables are designed for incremental loading
+    - JSON fields from Bronze are transformed into relational columns
+    - No business logic or aggregation is applied
 =============================================================
 */
 
@@ -26,7 +31,6 @@ longitude DECIMAL(9,6) NOT NULL CHECK (longitude BETWEEN -180 AND 180)
 );
 
 -- Creating OW Alerts table in Silver schema
-drop table if exists silver.openweather_alerts;
 create table silver.openweather_alerts (
 alert_id_pk SERIAL PRIMARY KEY,
 mtn_id VARCHAR(3) NOT NULL,
@@ -41,3 +45,5 @@ alert_tags JSONB,
 -- for upsert purposes
 unique (mtn_id, alert_event, alert_start)
 );
+
+
