@@ -26,10 +26,10 @@ cols = ['mtn_id'] + [c for c in raw_mtns.columns if c != 'mtn_id']
 raw_mtns = raw_mtns[cols]
 
 # Standardizing column names
-raw_mtns = raw_mtns.rename(columns = {'Rank':'rank', 'Mountain peak':'mtn_peak', 'Mountain range':'mtn_range'})
+raw_mtns = raw_mtns.rename(columns = {'Rank':'rank', 'Mountain peak':'mtn_name', 'Mountain range':'mtn_range'})
 
 # Remove unnecessary chars from mountain_peak col
-raw_mtns['mtn_peak'] = raw_mtns['mtn_peak'].str.replace(r'\[[^\]]*\]', '', regex=True).str.strip()
+raw_mtns['mtn_name'] = raw_mtns['mtn_name'].str.replace(r'\[[^\]]*\]', '', regex=True).str.strip()
 
 # Split elevation into ft and m
 raw_mtns['elev_ft'] = raw_mtns['Elevation'].str.split(pat = 'ft').str[0].str.replace(',', '').str.strip()

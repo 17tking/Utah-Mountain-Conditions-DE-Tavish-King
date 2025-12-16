@@ -22,3 +22,4 @@ create database utahmountains;
 create schema bronze;
 create schema silver;
 create schema gold;
+create schema meta;

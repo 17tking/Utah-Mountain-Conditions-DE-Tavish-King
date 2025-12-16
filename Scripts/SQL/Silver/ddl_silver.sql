@@ -3,8 +3,41 @@
 DDL Script: Create Silver Tables
 =============================================================
 Script Purpose:
-
+		This script creates silver layer tables. All tables are
+		in 3rd normal form (3NF)...
 Note: 
- 
+ 		Specific variable constraints are used...
 =============================================================
 */
+
+-- Creating dimension wiki_mtns in Silver schema
+create table silver.dim_wiki_mtns (
+mtn_id_pk VARCHAR(3) PRIMARY KEY,
+mtn_name VARCHAR(100) NOT NULL,
+mtn_range VARCHAR(100),
+elev_ft INT CHECK (elev_ft > 0),
+elev_m INT CHECK (elev_m > 0),
+prom_ft INT,
+prom_m INT,
+isol_mi DECIMAL(6,2),
+isol_km DECIMAL(6,2),
+latitude DECIMAL(9,6) NOT NULL CHECK (latitude BETWEEN -90 AND 90),
+longitude DECIMAL(9,6) NOT NULL CHECK (longitude BETWEEN -180 AND 180)
+);
+
+-- Creating OW Alerts table in Silver schema
+drop table if exists silver.openweather_alerts;
+create table silver.openweather_alerts (
+alert_id_pk SERIAL PRIMARY KEY,
+mtn_id VARCHAR(3) NOT NULL,
+latitude DECIMAL(9,6) NOT NULL CHECK (latitude BETWEEN -90 AND 90),
+longitude DECIMAL(9,6) NOT NULL CHECK (longitude BETWEEN -180 AND 180),
+alert_sender_name TEXT,
+alert_event TEXT NOT NULL,
+alert_start TIMESTAMPTZ NOT NULL,
+alert_end TIMESTAMPTZ NOT NULL CHECK (alert_end >= alert_start),
+alert_description TEXT CHECK (length(alert_description) <= 5000),
+alert_tags JSONB,
+-- for upsert purposes
+unique (mtn_id, alert_event, alert_start)
+);

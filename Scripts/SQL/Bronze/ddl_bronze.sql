@@ -25,7 +25,7 @@ drop table if exists bronze.wiki_mtns;
 
 create table bronze.wiki_mtns (
 mtn_id VARCHAR(3),
-mtn_peak VARCHAR(100),
+mtn_name VARCHAR(100),
 mtn_range VARCHAR(100),
 elev_ft INT,
 elev_m INT,
@@ -58,7 +58,6 @@ ON bronze.openweather_alerts (
     ((alert->>'start')),
     ((alert->>'end'))
 );
-
 
 -- Creating Daily forecasts table from OpenMeteo in Bronze schema
 drop table if exists bronze.openmeteo_daily;
