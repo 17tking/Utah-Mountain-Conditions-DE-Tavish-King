@@ -5,7 +5,7 @@ Script Purpose:
 
 */
 
-insert into silver.dim_wiki_mtns (mtn_id_pk, mtn_name, mtn_range, elev_ft, elev_m, prom_ft, prom_m, isol_mi, isol_km, latitude, longitude)
+insert into silver.wiki_mtns (mtn_id_pk, mtn_name, mtn_range, elev_ft, elev_m, prom_ft, prom_m, isol_mi, isol_km, latitude, longitude)
 select mtn_id, 
 	   mtn_name, 
 	   mtn_range, 

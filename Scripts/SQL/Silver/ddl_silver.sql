@@ -16,7 +16,7 @@ Notes:
 */
 
 -- Creating dimension wiki_mtns in Silver schema
-create table silver.dim_wiki_mtns (
+create table silver.wiki_mtns (
 mtn_id_pk VARCHAR(3) PRIMARY KEY,
 mtn_name VARCHAR(100) NOT NULL,
 mtn_range VARCHAR(100),
