@@ -45,8 +45,8 @@ rows = [tuple(row) for row in clean_mtns.to_numpy()]
 columns = ",".join(clean_mtns.columns)
 
 query = f"""
-    insert into bronze.wiki_mtns ({columns})
-    values %s
+    INSERT INTO bronze.wiki_mtns ({columns})
+    VALUES %s
 """
 
 # --------------------

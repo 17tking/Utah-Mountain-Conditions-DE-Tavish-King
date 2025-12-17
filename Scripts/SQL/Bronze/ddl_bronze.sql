@@ -35,9 +35,8 @@ isol_mi DECIMAL(6,2),
 isol_km DECIMAL(6,2),
 latitude DECIMAL(9,6),
 longitude DECIMAL(9,6),
-load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 );
-
 
 -- Creating table for alert data from openweather in Bronze schema
 drop table if exists bronze.openweather_alerts;
@@ -104,4 +103,4 @@ create table bronze.openmeteo_lightning (
 	utc_offset_seconds INT,
 	pulled_at TIMESTAMPTZ NOT NULL,
 	lightning_forecast JSONB NOT NULL
-)
+);
