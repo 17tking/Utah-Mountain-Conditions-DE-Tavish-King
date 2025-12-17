@@ -24,7 +24,7 @@ try:
         )
     cur = conn.cursor()
 
-    # Pulling weathercode data from WikiData folder
+    # Pulling weathercode data from Wiki Data folder
     with open("Wiki Data/descriptions.json", "r", encoding="utf-8") as f:
         weathercodes = json.load(f)
 
