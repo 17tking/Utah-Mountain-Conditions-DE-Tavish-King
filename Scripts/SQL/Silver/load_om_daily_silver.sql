@@ -32,7 +32,7 @@ select distinct on (mtn_id, (daily_forecast -> 'daily' ->> 'time')::date)
 	elevation,
 	timezone,
 	pulled_at,
-	-- forecast metrics
+	-- daily forecast metrics
 	(daily_forecast -> 'daily' ->> 'time')::date as dly_time,
 	(daily_forecast -> 'daily' ->> 'sunset')::timestamptz as dly_sunset,
 	(daily_forecast -> 'daily' ->> 'sunrise')::timestamptz as dly_sunrise,
@@ -91,7 +91,6 @@ set
     longitude = excluded.longitude,
     elevation_m = excluded.elevation_m,
     timezone = excluded.timezone,
-    -- forecast metrics
     dly_sunset = excluded.dly_sunset,
     dly_sunrise = excluded.dly_sunrise,
     dly_rain_sum_mm = excluded.dly_rain_sum_mm,
