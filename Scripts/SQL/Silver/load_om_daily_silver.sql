@@ -1,0 +1,136 @@
+/*
+
+Script Purpose:
+	Inserting bronze.openmeteo_daily data into silver layer with constraints for idempotency.
+
+Note:
+	Incremental logic ensures only one forecast per mountain per calendar day (e.g. '2025-12-25'). 
+	If the pipeline runs multiple times on the same day, existing records are 
+	updated rather than duplicated.
+
+*/
+
+insert into silver.openmeteo_daily (mtn_id, latitude, longitude, elevation_m, timezone, pulled_at, dly_time, dly_sunset, 
+									dly_sunrise, dly_rain_sum_mm, dly_showers_sum_mm, dly_snowfall_sum_cm, dly_uv_index_max, 
+									dly_weather_code, dly_visibility_max_m, dly_visibility_min_m, dly_cloud_cover_max_pct, 
+									dly_cloud_cover_min_pct, dly_visibility_mean_m, dly_cloud_cover_mean_pct, dly_dew_point_2m_max_celsius,
+									dly_dew_point_2m_min_celsius, dly_daylight_duration_seconds, dly_dew_point_2m_mean_celsius,
+									dly_precipitation_sum_mm, dly_sunshine_duration_seconds, dly_temperature_2m_max_celsius, 
+									dly_temperature_2m_min_celsius, dly_wind_gusts_10m_max_kmh, dly_wind_gusts_10m_min_kmh,
+									dly_wind_speed_10m_max_kmh, dly_wind_speed_10m_min_kmh, dly_precipitation_hours,
+									dly_temperature_2m_mean_celsius, dly_wind_gusts_10m_mean_kmh, dly_wind_speed_10m_mean_kmh,
+									dly_surface_pressure_max_hpa, dly_surface_pressure_min_hpa, dly_surface_pressure_mean_hpa,
+									dly_apparent_temperature_max_celsius, dly_apparent_temperature_min_celsius, dly_relative_humidity_2m_max_pct,
+									dly_relative_humidity_2m_min_pct, dly_apparent_temperature_mean_celsius, dly_relative_humidity_2m_mean_pct,
+									dly_wind_dir_10m_dominant, dly_precipitation_probability_max_pct, dly_precipitation_probability_min_pct,
+									dly_precipitation_probability_mean_pct
+)
+select distinct on (mtn_id, (daily_forecast -> 'daily' ->> 'time')::date)
+	mtn_id,
+	latitude,
+	longitude,
+	elevation,
+	timezone,
+	pulled_at,
+	-- forecast metrics
+	(daily_forecast -> 'daily' ->> 'time')::date as dly_time,
+	(daily_forecast -> 'daily' ->> 'sunset')::timestamptz as dly_sunset,
+	(daily_forecast -> 'daily' ->> 'sunrise')::timestamptz as dly_sunrise,
+	(daily_forecast -> 'daily' -> 'rain_sum' ->> 0)::numeric as dly_rain_sum_mm,
+	(daily_forecast -> 'daily' -> 'showers_sum' ->> 0)::numeric as dly_showers_sum_mm,
+	(daily_forecast -> 'daily' -> 'snowfall_sum' ->> 0)::numeric as dly_snowfall_sum_cm,
+	(daily_forecast -> 'daily' -> 'uv_index_max' ->> 0)::numeric as dly_uv_index_max,
+	(daily_forecast -> 'daily' -> 'weather_code' ->> 0)::int as dly_weather_code,
+	(daily_forecast -> 'daily' -> 'visibility_max' ->> 0)::numeric as dly_visibility_max_m,
+	(daily_forecast -> 'daily' -> 'visibility_min' ->> 0)::numeric as dly_visibility_min_m,
+	(daily_forecast -> 'daily' -> 'cloud_cover_max' ->> 0)::int as dly_cloud_cover_max_pct,
+	(daily_forecast -> 'daily' -> 'cloud_cover_min' ->> 0)::int as dly_cloud_cover_min_pct,
+	(daily_forecast -> 'daily' -> 'visibility_mean' ->> 0)::numeric as dly_visibility_mean_m,
+	(daily_forecast -> 'daily' -> 'cloud_cover_mean' ->> 0)::int as dly_cloud_cover_mean_pct,
+	(daily_forecast -> 'daily' -> 'dew_point_2m_max' ->> 0)::numeric as dly_dew_point_2m_max_celsius,
+	(daily_forecast -> 'daily' -> 'dew_point_2m_min' ->> 0)::numeric as dly_dew_point_2m_min_celsius,
+	(daily_forecast -> 'daily' -> 'daylight_duration' ->> 0)::numeric as dly_daylight_duration_seconds,
+	(daily_forecast -> 'daily' -> 'dew_point_2m_mean' ->> 0)::numeric as dly_dew_point_2m_mean_celsius,
+	(daily_forecast -> 'daily' -> 'precipitation_sum' ->> 0)::numeric as dly_precipitation_sum_mm,
+	(daily_forecast -> 'daily' -> 'sunshine_duration' ->> 0)::numeric as dly_sunshine_duration_seconds,
+	(daily_forecast -> 'daily' -> 'temperature_2m_max' ->> 0)::numeric as dly_temperature_2m_max_celsius,
+	(daily_forecast -> 'daily' -> 'temperature_2m_min' ->> 0)::numeric as dly_temperature_2m_min_celsius,
+	(daily_forecast -> 'daily' -> 'wind_gusts_10m_max' ->> 0)::numeric as dly_wind_gusts_10m_max_kmh,
+	(daily_forecast -> 'daily' -> 'wind_gusts_10m_min' ->> 0)::numeric as dly_wind_gusts_10m_min_kmh,
+	(daily_forecast -> 'daily' -> 'wind_speed_10m_max' ->> 0)::numeric as dly_wind_speed_10m_max_kmh,
+	(daily_forecast -> 'daily' -> 'wind_speed_10m_min' ->> 0)::numeric as dly_wind_speed_10m_min_kmh,
+	(daily_forecast -> 'daily' -> 'precipitation_hours' ->> 0)::numeric as dly_precipitation_hours,
+	(daily_forecast -> 'daily' -> 'temperature_2m_mean' ->> 0)::numeric as dly_temperature_2m_mean_celsius,
+	(daily_forecast -> 'daily' -> 'wind_gusts_10m_mean' ->> 0)::numeric as dly_wind_gusts_10m_mean_kmh,
+	(daily_forecast -> 'daily' -> 'wind_speed_10m_mean' ->> 0)::numeric as dly_wind_speed_10m_mean_kmh,
+	(daily_forecast -> 'daily' -> 'surface_pressure_max' ->> 0)::numeric as dly_surface_pressure_max_hpa,
+	(daily_forecast -> 'daily' -> 'surface_pressure_min' ->> 0)::numeric as dly_surface_pressure_min_hpa,
+	(daily_forecast -> 'daily' -> 'surface_pressure_mean' ->> 0)::numeric as dly_surface_pressure_mean_hpa,
+	(daily_forecast -> 'daily' -> 'apparent_temperature_max' ->> 0)::numeric as dly_apparent_temperature_max_celsius,
+	(daily_forecast -> 'daily' -> 'apparent_temperature_min' ->> 0)::numeric as dly_apparent_temperature_min_celsius,
+	(daily_forecast -> 'daily' -> 'relative_humidity_2m_max' ->> 0)::int as dly_relative_humidity_2m_max_pct,
+	(daily_forecast -> 'daily' -> 'relative_humidity_2m_min' ->> 0)::int as dly_relative_humidity_2m_min_pct,
+	(daily_forecast -> 'daily' -> 'apparent_temperature_mean' ->> 0)::numeric as dly_apparent_temperature_mean_celsius,
+	(daily_forecast -> 'daily' -> 'relative_humidity_2m_mean' ->> 0)::int as dly_relative_humidity_2m_mean_pct,
+	(daily_forecast -> 'daily' -> 'wind_direction_10m_dominant' ->> 0)::int as dly_wind_direction_10m_dominant,
+	(daily_forecast -> 'daily' -> 'precipitation_probability_max' ->> 0)::int as dly_precipitation_probability_max_pct,
+	(daily_forecast -> 'daily' -> 'precipitation_probability_min' ->> 0)::int as dly_precipitation_probability_min_pct,
+	(daily_forecast -> 'daily' -> 'precipitation_probability_mean' ->> 0)::int as dly_precipitation_probability_mean_pct
+from bronze.openmeteo_daily
+-- incremental logic
+where pulled_at::date >= coalesce(
+    (select max(pulled_at::date) from silver.openmeteo_daily), 
+    '1900-01-01'::date
+)
+order by mtn_id, (daily_forecast -> 'daily' ->> 'time')::date, pulled_at desc
+on conflict (mtn_id, dly_time) 
+do update 
+set
+    pulled_at = excluded.pulled_at,
+    latitude = excluded.latitude,
+    longitude = excluded.longitude,
+    elevation_m = excluded.elevation_m,
+    timezone = excluded.timezone,
+    -- forecast metrics
+    dly_sunset = excluded.dly_sunset,
+    dly_sunrise = excluded.dly_sunrise,
+    dly_rain_sum_mm = excluded.dly_rain_sum_mm,
+    dly_showers_sum_mm = excluded.dly_showers_sum_mm,
+    dly_snowfall_sum_cm = excluded.dly_snowfall_sum_cm,
+    dly_uv_index_max = excluded.dly_uv_index_max,
+    dly_weather_code = excluded.dly_weather_code,
+    dly_visibility_max_m = excluded.dly_visibility_max_m,
+    dly_visibility_min_m = excluded.dly_visibility_min_m,
+    dly_cloud_cover_max_pct = excluded.dly_cloud_cover_max_pct,
+    dly_cloud_cover_min_pct = excluded.dly_cloud_cover_min_pct,
+    dly_visibility_mean_m = excluded.dly_visibility_mean_m,
+    dly_cloud_cover_mean_pct = excluded.dly_cloud_cover_mean_pct,
+    dly_dew_point_2m_max_celsius = excluded.dly_dew_point_2m_max_celsius,
+    dly_dew_point_2m_min_celsius = excluded.dly_dew_point_2m_min_celsius,
+    dly_daylight_duration_seconds = excluded.dly_daylight_duration_seconds,
+    dly_dew_point_2m_mean_celsius = excluded.dly_dew_point_2m_mean_celsius,
+    dly_precipitation_sum_mm = excluded.dly_precipitation_sum_mm,
+    dly_sunshine_duration_seconds = excluded.dly_sunshine_duration_seconds,
+    dly_temperature_2m_max_celsius = excluded.dly_temperature_2m_max_celsius,
+    dly_temperature_2m_min_celsius = excluded.dly_temperature_2m_min_celsius,
+    dly_wind_gusts_10m_max_kmh = excluded.dly_wind_gusts_10m_max_kmh,
+    dly_wind_gusts_10m_min_kmh = excluded.dly_wind_gusts_10m_min_kmh,
+    dly_wind_speed_10m_max_kmh = excluded.dly_wind_speed_10m_max_kmh,
+    dly_wind_speed_10m_min_kmh = excluded.dly_wind_speed_10m_min_kmh,
+    dly_precipitation_hours = excluded.dly_precipitation_hours,
+    dly_temperature_2m_mean_celsius = excluded.dly_temperature_2m_mean_celsius,
+    dly_wind_gusts_10m_mean_kmh = excluded.dly_wind_gusts_10m_mean_kmh,
+    dly_wind_speed_10m_mean_kmh = excluded.dly_wind_speed_10m_mean_kmh,
+    dly_surface_pressure_max_hpa = excluded.dly_surface_pressure_max_hpa,
+    dly_surface_pressure_min_hpa = excluded.dly_surface_pressure_min_hpa,
+    dly_surface_pressure_mean_hpa = excluded.dly_surface_pressure_mean_hpa,
+    dly_apparent_temperature_max_celsius = excluded.dly_apparent_temperature_max_celsius,
+    dly_apparent_temperature_min_celsius = excluded.dly_apparent_temperature_min_celsius,
+    dly_relative_humidity_2m_max_pct = excluded.dly_relative_humidity_2m_max_pct,
+    dly_relative_humidity_2m_min_pct = excluded.dly_relative_humidity_2m_min_pct,
+    dly_apparent_temperature_mean_celsius = excluded.dly_apparent_temperature_mean_celsius,
+    dly_relative_humidity_2m_mean_pct = excluded.dly_relative_humidity_2m_mean_pct,
+    dly_wind_dir_10m_dominant = excluded.dly_wind_dir_10m_dominant,
+    dly_precipitation_probability_max_pct = excluded.dly_precipitation_probability_max_pct,
+    dly_precipitation_probability_min_pct = excluded.dly_precipitation_probability_min_pct,
+    dly_precipitation_probability_mean_pct = excluded.dly_precipitation_probability_mean_pct;

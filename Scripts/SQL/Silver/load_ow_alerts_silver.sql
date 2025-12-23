@@ -3,6 +3,10 @@
 Script Purpose:
 	Inserting bronze.openweather_alerts data into silver layer with constraints for idempotency.
 
+Notes:
+	This table contains only active, live alerts and does not maintain a historical 
+	record, as weather alerts are time-bound and will not require long-term analysis.
+
 */
 
 insert into silver.openweather_alerts (mtn_id, latitude, longitude, alert_sender_name, alert_event, alert_start, alert_end, alert_description, alert_tags)
