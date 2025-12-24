@@ -19,7 +19,6 @@ I used incremental processing during bronze-to-silver transformations to efficie
 The script also provides upsert behavior rules. This allows the pipeline to safely rerun without creating duplicate records and preserving historical forecast data across different pull dates.
 
 ![Incremental Processing example](Docs/incremental_process_ex.jpg)
-*An example of the incremental logic used*
 
 ### Local Automation: Windows Task Scheduler
 xxxxxxx.
