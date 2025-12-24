@@ -4,7 +4,10 @@ Script Purpose:
 	Inserting bronze.openmeteo_lightning data into silver layer with constraints for idempotency.
 
 Notes:
-
+	Unpacks JSON arrays using CROSS JOIN LATERAL to create individual rows for 
+	each 15-minute forecast interval. Incremental logic with upsert prevents 
+	duplicates if the pipeline runs multiple times, maintaining one forecast 
+	per mountain per time interval.
 */
 
 insert into silver.openmeteo_lightning (mtn_id, latitude, longitude, elevation_m, timezone,
