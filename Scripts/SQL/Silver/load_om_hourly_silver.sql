@@ -4,7 +4,10 @@ Script Purpose:
 	Inserting bronze.openmeteo_hourly data into silver layer with constraints for idempotency.
 
 Notes:
-
+	The pipeline maintains one forecast record per mountain per hour. 
+	Running the insert multiple times on the same hour will update 
+	existing records (upsert) rather than create duplicates, while 
+	new hours are appended to preserve forecast history.
 
 */
 
@@ -86,5 +89,3 @@ set
     hrly_relative_humidity_2m_pct = excluded.hrly_relative_humidity_2m_pct,
     hrly_freezing_level_height_m = excluded.hrly_freezing_level_height_m,
     hrly_precipitation_probability_pct = excluded.hrly_precipitation_probability_pct;
-
-select * from silver.openmeteo_hourly order by mtn_id asc;
