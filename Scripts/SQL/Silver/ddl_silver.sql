@@ -174,8 +174,7 @@ longitude DECIMAL(9,6) NOT NULL CHECK(longitude BETWEEN -180 AND 180),
 elevation_m INT CHECK (elevation_m > 0),
 timezone VARCHAR(50) NOT NULL,
 pulled_at TIMESTAMPTZ,
---json columns
-
+ltng_time TIMESTAMP NOT NULL,
+ltng_potential_j_kg NUMERIC(10,2),
+PRIMARY KEY (mtn_id, ltng_time)
 );
-
-select * from bronze.openmeteo_lightning;
