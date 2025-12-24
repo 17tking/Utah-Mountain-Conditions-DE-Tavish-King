@@ -4,6 +4,12 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="nt9JG4wtrHAd-XDeYO-S-12" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;entryX=0.114;entryY=0.66;entryDx=0;entryDy=0;entryPerimeter=0;" target="W2P3zOtaKUh5HbalggtE-23" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="720" y="839.8400000000001" as="sourcePoint" />
+            <mxPoint x="944.9000000000001" y="830" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="nt9JG4wtrHAd-XDeYO-S-10" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;dashed=1;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
             <mxPoint x="718.06" y="701.5400000000002" as="sourcePoint" />
@@ -153,6 +159,9 @@
         </mxCell>
         <mxCell id="nt9JG4wtrHAd-XDeYO-S-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=18;fillColor=#eeeeee;strokeColor=#36393d;" value="openmeteo_daily" vertex="1">
           <mxGeometry height="60" width="255" x="1007.5" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="nt9JG4wtrHAd-XDeYO-S-13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=18;fillColor=#eeeeee;strokeColor=#36393d;" value="openmeteo_lightning" vertex="1">
+          <mxGeometry height="60" width="255" x="1010" y="810" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

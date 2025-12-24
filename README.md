@@ -11,10 +11,15 @@ Let me first walk you through the flow of this project and its end goal...
 
 
 ### Data Flow
-xxxxxxx.
+![Data Flow](Docs/Data%20Flow%20-%20Utah%20Mountains.drawio)
 
 ### Incremental Logic
-xxxxxxx.
+I used incremental processing during bronze-to-silver transformations to efficiently handle new data without creating duplicates. The logic compares the 'pulled_at' timestamp from the bronze table against the max 'pulled_at' in the silver table using a '>=' filter, ensuring no records are missed when multiple pulls share the same timestamp. 
+
+The script also provides upsert behavior rules. This allows the pipeline to safely rerun without creating duplicate records and preserving historical forecast data across different pull dates.
+
+![Incremental Processing example](Docs/incremental_process_ex.jpg)
+*An example of the incremental logic used*
 
 ### Local Automation: Windows Task Scheduler
 xxxxxxx.
