@@ -19,7 +19,7 @@ select distinct on (mtn_id, (lightning_forecast -> 'minutely_15' -> 'time' ->> i
 	pulled_at,
 	--json cols
 	(lightning_forecast -> 'minutely_15' -> 'time' ->> idx)::timestamp as ltng_time,
-	(lightning_forecast -> 'minutely_15' -> 'lightning_potential' ->> idx)::numeric as ltng_potential_j_kg
+	coalesce((lightning_forecast -> 'minutely_15' -> 'lightning_potential' ->> idx)::numeric,0) as ltng_potential_j_kg
 from bronze.openmeteo_lightning
 cross join lateral generate_series(
     0, 
