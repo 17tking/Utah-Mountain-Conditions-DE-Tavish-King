@@ -135,7 +135,6 @@ longitude DECIMAL(9,6) NOT NULL CHECK(longitude BETWEEN -180 AND 180),
 elevation_m INT CHECK (elevation_m > 0),
 timezone VARCHAR(50) NOT NULL,
 pulled_at TIMESTAMPTZ,
---json columns
 hrly_time TIMESTAMP NOT NULL,
 hrly_rain_mm NUMERIC(10,2) CHECK(hrly_rain_mm >= 0),
 hrly_is_day INT,
@@ -162,3 +161,21 @@ hrly_freezing_level_height_m NUMERIC(10,2),
 hrly_precipitation_probability_pct INT CHECK(hrly_precipitation_probability_pct BETWEEN 0 AND 100),
 PRIMARY KEY (mtn_id, hrly_time)
 );
+
+-----------------------------------------------------------
+-- Creating OM Lightning forecast table in Silver schema --
+-----------------------------------------------------------
+drop table if exists silver.openmeteo_lightning;
+
+create table silver.openmeteo_lightning (
+mtn_id INT NOT NULL,
+latitude DECIMAL(9,6) NOT NULL CHECK(latitude BETWEEN -90 AND 90),
+longitude DECIMAL(9,6) NOT NULL CHECK(longitude BETWEEN -180 AND 180),
+elevation_m INT CHECK (elevation_m > 0),
+timezone VARCHAR(50) NOT NULL,
+pulled_at TIMESTAMPTZ,
+--json columns
+
+);
+
+select * from bronze.openmeteo_lightning;
