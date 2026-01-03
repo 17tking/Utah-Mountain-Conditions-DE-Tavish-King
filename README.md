@@ -3,54 +3,82 @@
 
 
 ## Welcome!
-This project showcases the movement of data from online sources to visual dashboards tracking mountain peak conditions for the 50 highest summits in Utah. Besides being able to explore more of my love for the mountains, I also designed this portfolio project to increase my skills and develop best practices in data engineering and analytics. Explore and enjoy! 
+This project demonstrates an end-to-end data engineering pipeline that tracks weather conditions across Utah's 50 highest mountain peaks. By pulling real-time forecasts from multiple APIs and transforming them into analytics-ready datasets, my project showcases skills in ETL development, database design, workflow orchestration, and data visualization. 
+
+Besides being able to explore more of my love for the mountains, I also designed this portfolio project to increase my skills and develop best practices in data engineering and analytics. Explore and enjoy! 
 
 
 ## How It Works?
-Let me first walk you through the flow of this project and its end goal...
-
 
 ### Data Flow
 ![Data Flow]()
 
-### Incremental Logic
-I used incremental processing during bronze-to-silver transformations to efficiently handle new data without creating duplicates. The logic compares the 'pulled_at' timestamp from the bronze table against the max 'pulled_at' in the silver table using a '>=' filter, ensuring no records are missed when multiple pulls share the same timestamp. 
+**Data Sources:**
+- Wikipedia: Top 50 Highest Summits/Mountains in Utah
+- Weather Codes: https://gist.github.com/stellasphere/9490c195ed2b53c707087c8c2db4ec0c
+- OpenMeteo API: Daily (7-day forecast), hourly (24-hour forecast), and 15-minute lightning potential data
+- OpenWeather API: Live weather alerts
 
-The script also provides upsert behavior rules. This allows the pipeline to safely rerun without creating duplicate records and preserving historical forecast data across different pull dates.
+
+### Incremental Logic
+All bronze-to-silver transformations use incremental processing to efficiently handle new data while preventing duplicates. The pipeline compares the `pulled_at` timestamp from bronze against the maximum `pulled_at` in silver using a `>=` filter, ensuring no records are missed when multiple pulls share the same timestamp.
+
+**Upsert behavior:**
+- **Daily data**: Stores 7-day forecast history with `(mtn_id, dly_time, pulled_at)` primary key to track how predictions evolve over time
+- **Hourly/Lightning data**: Updates in place with `(mtn_id, time)` primary key for current conditions
+- **Alerts**: Maintains only active alerts (no historical tracking)
+
+This approach allows the pipeline to safely rerun without creating duplicates while preserving forecast trends.
 
 ![Incremental Processing example](Docs/incremental_process_ex.jpg)
 
+**Data Retention:**
+A 6-month rolling window balances historical analyses with storage efficiency for my local computer. Automated cleanup runs daily via Airflow to maintain optimal database size.
+
 ### Apache Airflow Orchestration
-xxxxxxx.
+*Describe my DAG structure, scheduling intervals, task dependencies, monitoring/alerting setup*
 
 ### Insights
-xxxxxxx.
-
-### Decision Making
-xxxxxxx.
+*Describe some interesting insights from data analysis*
 
 
 ## Data Architecture
-The database follows the **medallion architecture** style. Data is first stored raw, then transformed, and finally loaded into tables/views ready for analysis and visualizations.
+The database follows the **medallion architecture** (Bronze -> Silver -> Gold) style. Data is first stored raw, then transformed, and finally loaded into tables/views ready for analysis and visualizations.
 
 ![DWH Layers](Docs/DWH%20Layers.png)
 
-1. **Bronze** -- Raw data is ingested from external APIs and stored in the Bronze schema exactly as received (usually in JSON form).
-2. **Silver** -- The raw data is cleaned, standardized, and normalized. This layer removes noise, fixes inconsistencies, and prepares the data for modeling. 
-3. **Gold** -- Fully transformed data is organized into dimensional and fact tables. This layer is optimized for analytics, dashboards, and downstream reporting.
+**Bronze Layer (Raw)** 
+- Stores data exactly as received from APIs
+- JSON format preserved for full fidelity
+- Serves as immutable source of truth
+- Tables: `openmeteo_daily`, `openmeteo_hourly`, `openmeteo_lightning`, `openweather_alerts`, `wki_mtns`
+
+**Silver Layer (Cleaned & Normalized)**
+- Flattens nested JSON into relational tables
+- Implements incremental upsert logic
+- Handles deduplication and data quality checks
+- Tables mirror bronze structure with typed columns
+
+3. **Gold (Analytical Ready)**
+- Views for specific use cases
+- Aggregated metrics
 
 
 ## Tools & Technologies
 
-**Python**: Connecting to APIs, Extract Transform Load processes.
+**Python 3.14.0**: API extraction, data validation, error handling
 
-**PostgreSQL**: Creating database, schemas, tables. Extract Load Transform processes.
+**PostgreSQL 18**: Relational database with JSONB support for semi-structured data, incremental load patterns
 
-**R**: Visualizations.
+**SQL**: Complex transformations including JSON parsing, array unnesting, window functions, upserts
 
-**Power BI Desktop**:
+**Apache Airflow**: Workflow orchestration, scheduling, dependency management, monitoring
 
-**Apache Airflow**:
+**Power BI**: Interactive dashboards for tracking trends, hiking conditions, and more
+
+**R/ggplot2**: Statistical analysis and visualizations
+
+**Git/GitHub**: Version control and project documentation
 
 
 ## Repository Structure
