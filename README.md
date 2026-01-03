@@ -30,7 +30,6 @@ All bronze-to-silver transformations use incremental processing to efficiently h
 
 This approach allows the pipeline to safely rerun without creating duplicates while preserving forecast trends.
 
-![Incremental Processing example](Docs/incremental_process_ex.jpg)
 
 **Data Retention:**
 A 6-month rolling window balances historical analyses with storage efficiency for my local computer. Automated cleanup runs daily via Airflow to maintain optimal database size.
