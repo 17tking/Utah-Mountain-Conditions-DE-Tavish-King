@@ -58,7 +58,7 @@ try:
         ],
         "models": "best_match",  
         "timezone": "auto",      
-        "forecast_days": 1       
+        "forecast_days": 7       
     }
 
     # ------------------

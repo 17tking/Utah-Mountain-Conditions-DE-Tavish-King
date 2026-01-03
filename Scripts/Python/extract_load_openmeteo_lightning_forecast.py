@@ -41,8 +41,8 @@ try:
     	"models": "best_match",
     	"minutely_15": "lightning_potential",
     	"timezone": "auto",
-    	"forecast_hours": 1,
-    	"forecast_minutely_15": 4,
+    	"forecast_days": 1,
+    	"forecast_minutely_15": 96,
     }
 
     # ------------------
