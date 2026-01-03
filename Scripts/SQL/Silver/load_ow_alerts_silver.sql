@@ -14,14 +14,14 @@ select
   mtn_id,
   latitude,
   longitude,
-  alert -> 'alert' ->> 'sender_name' as alert_sender_name,
-  alert -> 'alert' ->> 'event' as alert_event,
-  to_timestamp((alert -> 'alert' ->> 'start')::bigint) as alert_start,
-  to_timestamp((alert -> 'alert' ->> 'end')::bigint) as alert_end,
-  alert -> 'alert' ->> 'description' as alert_description,
-  alert -> 'alert' -> 'tags' as alert_tags
+  alert ->> 'sender_name' as alert_sender_name,
+  alert ->> 'event' as alert_event,
+  to_timestamp((alert ->> 'start')::bigint) as alert_start,
+  to_timestamp((alert ->> 'end')::bigint) as alert_end,
+  alert ->> 'description' as alert_description,
+  alert -> 'tags' as alert_tags
 from bronze.openweather_alerts
-where alert ? 'alert'
+where alert is not null
 on conflict (mtn_id, alert_event, alert_start) do update
 set
   alert_end = excluded.alert_end,

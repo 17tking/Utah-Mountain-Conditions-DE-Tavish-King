@@ -120,7 +120,7 @@ dly_wind_dir_10m_dominant INT,
 dly_precipitation_probability_max_pct INT CHECK(dly_precipitation_probability_max_pct BETWEEN 0 AND 100),
 dly_precipitation_probability_min_pct INT CHECK(dly_precipitation_probability_min_pct BETWEEN 0 AND 100),
 dly_precipitation_probability_mean_pct INT CHECK(dly_precipitation_probability_mean_pct BETWEEN 0 AND 100),
-PRIMARY KEY(mtn_id, dly_time)
+PRIMARY KEY(mtn_id, dly_time, pulled_at)
 );
 
 --------------------------------------------------------

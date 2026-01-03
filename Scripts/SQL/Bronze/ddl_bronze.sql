@@ -24,7 +24,7 @@ Warning:
 drop table if exists bronze.wiki_mtns;
 
 create table bronze.wiki_mtns (
-mtn_id VARCHAR(3),
+mtn_id INT,
 mtn_name VARCHAR(100),
 mtn_range VARCHAR(100),
 elev_ft INT,
@@ -35,7 +35,7 @@ isol_mi DECIMAL(6,2),
 isol_km DECIMAL(6,2),
 latitude DECIMAL(9,6),
 longitude DECIMAL(9,6),
-load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Creating table for alert data from openweather in Bronze schema
@@ -43,7 +43,7 @@ drop table if exists bronze.openweather_alerts;
 
 create table bronze.openweather_alerts (
     id SERIAL PRIMARY KEY,
-    mtn_id VARCHAR(3),
+    mtn_id INT,
     latitude FLOAT NOT NULL,
     longitude FLOAT NOT NULL,
     pulled_at TIMESTAMPTZ NOT NULL,
@@ -62,7 +62,7 @@ ON bronze.openweather_alerts (
 drop table if exists bronze.openmeteo_daily;
 
 create table bronze.openmeteo_daily (
-	mtn_id VARCHAR(3),
+	mtn_id INT,
 	latitude FLOAT NOT NULL,
 	longitude FLOAT NOT NULL,
 	elevation INT,
@@ -78,7 +78,7 @@ create table bronze.openmeteo_daily (
 drop table if exists bronze.openmeteo_hourly;
 
 create table bronze.openmeteo_hourly (
-	mtn_id VARCHAR(3),
+	mtn_id INT,
 	latitude FLOAT NOT NULL,
 	longitude FLOAT NOT NULL,
 	elevation INT,
@@ -94,7 +94,7 @@ create table bronze.openmeteo_hourly (
 drop table if exists bronze.openmeteo_lightning;
 
 create table bronze.openmeteo_lightning (
-	mtn_id VARCHAR(3),
+	mtn_id INT,
 	latitude FLOAT NOT NULL,
 	longitude FLOAT NOT NULL,
 	elevation INT,

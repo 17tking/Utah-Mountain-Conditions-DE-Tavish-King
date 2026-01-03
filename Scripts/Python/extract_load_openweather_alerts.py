@@ -65,7 +65,7 @@ def extract_all_summits():
             })
 
         # API buffer
-        time.sleep(0.3)
+        time.sleep(0.5)
 
     return results
 

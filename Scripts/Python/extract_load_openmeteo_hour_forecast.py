@@ -67,6 +67,7 @@ try:
 
         # Make request to Open-Meteo API
         r = requests.get(meteo_url, params=hr_params)
+        time.sleep(1)
         if r.status_code != 200:
             print(f"Failed for summit {s['name']}")
             continue
