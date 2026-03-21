@@ -3,9 +3,9 @@
 
 
 ## Welcome!
-This project demonstrates an end-to-end data engineering pipeline that tracks weather conditions across Utah's 50 highest mountain peaks. By pulling real-time forecasts from multiple APIs and transforming them into analytics-ready datasets, my project showcases skills in ETL development, database design, workflow orchestration, and data visualization. 
+This project demonstrates an end-to-end analytical engineering pipeline that tracks weather conditions across Utah's 50 highest mountain peaks. By pulling real-time forecasts from multiple APIs and transforming them into analytics-ready datasets, my project showcases skills in ETL development, database design, workflow orchestration, and data visualization. 
 
-Besides being able to explore more of my love for the mountains, I also designed this portfolio project to increase my skills and develop best practices in data engineering and analytics. Explore and enjoy! 
+Besides being able to explore more of my love for the mountains, I also designed this portfolio project to increase my skills and develop best practices in analytical engineering and data analysis. Explore and enjoy! 
 
 
 ## How It Works?
@@ -108,7 +108,7 @@ Utah-Mountain-Conditions-DE/
 
 **Tavish King**
 
-Data Analyst/Jr. Data Engineer
+Data Analyst/Jr. Analytics Engineer
 
 Feel free to connect on [LinkedIn](https://www.linkedin.com/in/tavish-king/) or check out more of my work!
 
