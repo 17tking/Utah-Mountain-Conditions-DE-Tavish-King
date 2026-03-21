@@ -5,7 +5,7 @@ Script Purpose:
 
 */
 
-insert into silver.wiki_mtns (mtn_id_pk, mtn_name, mtn_range, elev_ft, elev_m, prom_ft, prom_m, isol_mi, isol_km, latitude, longitude)
+insert into silver.wiki_mtns (mtn_id, mtn_name, mtn_range, elev_ft, elev_m, prom_ft, prom_m, isol_mi, isol_km, latitude, longitude)
 select mtn_id, 
 	   mtn_name, 
 	   mtn_range, 
@@ -22,8 +22,8 @@ where latitude between -90 and 90
 	and longitude between -180 and 180
 	and elev_ft > 0
 	and elev_m > 0
-on conflict (mtn_id_pk) do update 
-set
+on conflict (mtn_id) 
+do update set
 	mtn_name = excluded.mtn_name, 
 	mtn_range = excluded.mtn_range, 
 	elev_ft = excluded.elev_ft, 

@@ -1,5 +1,20 @@
 import psycopg2
 import os
+import time
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+def _get_conn():
+    """Internal helper to open a DB connection."""
+    return psycopg2.connect(
+        dbname=os.getenv('database'),
+        user=os.getenv('user'),
+        password=os.getenv('password'),
+        host=os.getenv('host'),
+        port=os.getenv('port')
+    )
 
 
 # -----------------------------------------
@@ -7,13 +22,7 @@ import os
 # -----------------------------------------
 # from utils import get_summits
 def get_summits():
-    conn = psycopg2.connect(
-        dbname=os.getenv('database'),
-        user=os.getenv('user'),
-        password=os.getenv('password'),
-        host=os.getenv('host'),
-        port=os.getenv('port')
-)
+    conn = _get_conn()
     cur = conn.cursor()
 
     query = """
@@ -32,4 +41,59 @@ def get_summits():
     return [
         {"mtn_id": r[0], "latitude": float(r[1]), "longitude": float(r[2])}
         for r in rows
-    ] 
+    ]
+
+
+# -----------------------------------------
+# API call logger
+# -----------------------------------------
+# Logs each API call to bronze.api_call_log.
+#
+# Usage — wrap your requests.get() like this:
+#
+#   from utils import log_api_call
+#   import time
+#
+#   start = time.time()
+#   r = requests.get(url, params=params, timeout=10)
+#   log_api_call(
+#       api_source='openmeteo',
+#       endpoint=url,
+#       mtn_id=s['mtn_id'],
+#       status_code=r.status_code,
+#       response_ms=round((time.time() - start) * 1000),
+#       success=r.status_code == 200
+#   )
+#
+# On API failure (exception before a response), pass:
+#   status_code=None, success=False, error_message=str(e)
+# -----------------------------------------
+def log_api_call(
+    api_source,
+    endpoint,
+    mtn_id=None,
+    status_code=None,
+    response_ms=None,
+    success=True,
+    error_message=None
+):
+    try:
+        conn = _get_conn()
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO bronze.api_call_log (
+                api_source,
+                endpoint,
+                mtn_id,
+                status_code,
+                response_ms,
+                success,
+                error_message
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (api_source, endpoint, mtn_id, status_code, response_ms, success, error_message))
+        conn.commit()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        # Logging should never crash the pipeline — fail silently here
+        print(f"Warning: api_call_log insert failed: {e}")

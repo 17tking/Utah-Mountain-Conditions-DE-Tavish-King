@@ -10,7 +10,7 @@ from utils import get_summits
 
 # ===============================================================
 # This script extracts daily weather alerts for all summits listed
-# in the wiki_mtns table using the OpenWeather One Call3.0 API.
+# in the wiki_mtns table using the OpenWeather One Call 3.0 API.
 #
 # It stores the raw alert data in the bronze.alerts PostgreSQL table
 # as JSONB, ensuring no duplicates via a unique index on (mtn_id,
@@ -19,10 +19,11 @@ from utils import get_summits
 # The script also handles incremental loading (1x daily) and
 # timestamps each pull for tracking purposes.
 # ===============================================================
+
 load_dotenv()
 
-# Open weather api key
 OW_KEY = os.getenv('owkey')
+
 
 # ------------
 # API Caller
@@ -44,16 +45,24 @@ def fetch_alerts(latitude, longitude):
     alerts = alert_data.get("alerts") or []
     return alerts
 
+
 # -----------------------------
 # Loops through all 50 summits
 # -----------------------------
 def extract_all_summits():
     results = []
+    failed_summits = []
     summits = get_summits()
 
     for s in summits:
         alerts = fetch_alerts(s["latitude"], s["longitude"])
-        pulled_at = datetime.now(timezone.utc).isoformat() #timezone aware + ISO string
+
+        # fetch_alerts returns [] on error, so track which summits came back empty
+        # due to API failure vs. genuinely having no alerts
+        if alerts is None:
+            failed_summits.append(s["mtn_id"])
+            continue
+        pulled_at = datetime.now(timezone.utc).isoformat()
 
         for a in alerts:
             results.append({
@@ -61,18 +70,20 @@ def extract_all_summits():
                 "latitude": float(s["latitude"]),
                 "longitude": float(s["longitude"]),
                 "pulled_at": pulled_at,
-                "alert": a #raw json object (bronze layer)
+                "alert": a
             })
 
-        # API buffer
         time.sleep(0.5)
+    
+    if failed_summits:
+        raise RuntimeError(f"API calls failed for {len(failed_summits)} summit(s): {failed_summits}")
 
     return results
+
 
 # -----------------------------------------
 # Loading raw json alert data to postgreSQL
 # -----------------------------------------
-
 def load_alerts_to_postgres(results):
     if not results:
         print("No alerts to load.")
@@ -88,10 +99,10 @@ def load_alerts_to_postgres(results):
     cur = conn.cursor()
 
     insert_alerts_query = """
-        insert into bronze.openweather_alerts (mtn_id, latitude, longitude, pulled_at, alert)
-        values %s
-        on conflict do nothing;
-"""
+        INSERT INTO bronze.openweather_alerts (mtn_id, latitude, longitude, pulled_at, alert)
+        VALUES %s
+        ON CONFLICT DO NOTHING
+    """
 
     # Preparing data for execute values
     values = [
@@ -112,6 +123,7 @@ def load_alerts_to_postgres(results):
     except Exception as e:
         conn.rollback()
         print(f"Error inserting alerts: {e}")
+        raise
     finally:
         cur.close()
         conn.close()
@@ -120,7 +132,7 @@ def load_alerts_to_postgres(results):
 # -------
 # Main
 # -------
-if __name__ == "__main__":
+def main():
     start_time = time.time()
     print("=" * 50)
     print(f">> Extracting Alert data from OpenWeather...")
@@ -133,3 +145,7 @@ if __name__ == "__main__":
     print("=" * 50)
     end_time = time.time()
     print(f">> Load Duration: {round(end_time - start_time, 2)} secs")
+ 
+ 
+if __name__ == "__main__":
+    main()

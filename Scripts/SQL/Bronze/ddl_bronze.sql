@@ -11,7 +11,8 @@ Script Purpose:
 
 Note: 
 	After running this script, you will need to run the
-	python scripts that populate the data. 
+	python scripts that populate the data.
+	Ensure that wiki_mtns and weathercodes are populated first before loading!!
 
 Warning: 
 	Running this script will erase data and tables. Ensure
@@ -20,87 +21,130 @@ Warning:
 */
 
 
--- Creating wiki_mtns table in bronze schema
-drop table if exists bronze.wiki_mtns;
+-- -------------------------
+-- bronze.wiki_mtns
+-- -------------------------
+drop table if exists bronze.wiki_mtns cascade;
 
 create table bronze.wiki_mtns (
-mtn_id INT,
-mtn_name VARCHAR(100),
-mtn_range VARCHAR(100),
-elev_ft INT,
-elev_m INT,
-prom_ft INT,
-prom_m INT,
-isol_mi DECIMAL(6,2),
-isol_km DECIMAL(6,2),
-latitude DECIMAL(9,6),
-longitude DECIMAL(9,6),
-load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    mtn_id          INT             PRIMARY KEY,
+    mtn_name        VARCHAR(100),
+    mtn_range       VARCHAR(100),
+    elev_ft         INT,
+    elev_m          INT,
+    prom_ft         INT,
+    prom_m          INT,
+    isol_mi         DECIMAL(6,2),
+    isol_km         DECIMAL(6,2),
+    latitude        DECIMAL(9,6),
+    longitude       DECIMAL(9,6),
+	timezone        VARCHAR(50),
+    load_timestamp  TIMESTAMP       DEFAULT CURRENT_TIMESTAMP
 );
 
--- Creating table for alert data from openweather in Bronze schema
-drop table if exists bronze.openweather_alerts;
+
+-- -------------------------
+-- bronze.openweather_alerts
+-- -------------------------
+drop table if exists bronze.openweather_alerts cascade;
 
 create table bronze.openweather_alerts (
-    id SERIAL PRIMARY KEY,
-    mtn_id INT,
-    latitude FLOAT NOT NULL,
-    longitude FLOAT NOT NULL,
-    pulled_at TIMESTAMPTZ NOT NULL,
-    alert JSONB NOT NULL
-);
--- Unique index on JSONB fields
-CREATE UNIQUE INDEX IF NOT EXISTS bronze_alerts_unique_idx
-ON bronze.openweather_alerts (
-    mtn_id,
-    ((alert->>'event')),
-    ((alert->>'start')),
-    ((alert->>'end'))
+    id          SERIAL          PRIMARY KEY,
+    mtn_id      INT             REFERENCES bronze.wiki_mtns(mtn_id),
+    latitude    FLOAT           NOT NULL,
+    longitude   FLOAT           NOT NULL,
+    pulled_at   TIMESTAMPTZ     NOT NULL,
+    alert       JSONB           NOT NULL
 );
 
--- Creating Daily forecasts table from OpenMeteo in Bronze schema
-drop table if exists bronze.openmeteo_daily;
+-- Unique index to prevent duplicate alerts
+create unique index if not exists bronze_alerts_unique_idx
+on bronze.openweather_alerts (
+    mtn_id,
+    (alert->>'event'),
+    (alert->>'start'),
+    (alert->>'end')
+);
+
+
+-- -------------------------
+-- bronze.openmeteo_daily
+-- -------------------------
+drop table if exists bronze.openmeteo_daily cascade;
 
 create table bronze.openmeteo_daily (
-	mtn_id INT,
-	latitude FLOAT NOT NULL,
-	longitude FLOAT NOT NULL,
-	elevation INT,
-	timezone VARCHAR(100),
-	timezone_abbreviation VARCHAR(5),
-	utc_offset_seconds INT,
-	pulled_at TIMESTAMPTZ NOT NULL,
-	daily_forecast JSONB NOT NULL
+    mtn_id                  INT             REFERENCES bronze.wiki_mtns(mtn_id),
+    latitude                FLOAT           NOT NULL,
+    longitude               FLOAT           NOT NULL,
+    elevation               INT,
+    timezone                VARCHAR(100),
+    timezone_abbreviation   VARCHAR(5),
+    utc_offset_seconds      INT,
+    pulled_at               TIMESTAMPTZ     NOT NULL,
+    daily_forecast          JSONB           NOT NULL
 );
 
+-- Unique index to prevent duplicate ingestion runs
+create unique index if not exists bronze_openmeteo_daily_unique_idx
+on bronze.openmeteo_daily (mtn_id, pulled_at);
 
--- Creating hourly forecasts from OpenMeteo in Bronze schema
-drop table if exists bronze.openmeteo_hourly;
+
+-- -------------------------
+-- bronze.openmeteo_hourly
+-- -------------------------
+drop table if exists bronze.openmeteo_hourly cascade;
 
 create table bronze.openmeteo_hourly (
-	mtn_id INT,
-	latitude FLOAT NOT NULL,
-	longitude FLOAT NOT NULL,
-	elevation INT,
-	timezone VARCHAR(100),
-	timezone_abbreviation VARCHAR(5),
-	utc_offset_seconds INT,
-	pulled_at TIMESTAMPTZ NOT NULL,
-	hourly_forecast JSONB NOT NULL
+    mtn_id                  INT             REFERENCES bronze.wiki_mtns(mtn_id),
+    latitude                FLOAT           NOT NULL,
+    longitude               FLOAT           NOT NULL,
+    elevation               INT,
+    timezone                VARCHAR(100),
+    timezone_abbreviation   VARCHAR(5),
+    utc_offset_seconds      INT,
+    pulled_at               TIMESTAMPTZ     NOT NULL,
+    hourly_forecast         JSONB           NOT NULL
 );
 
+-- Unique index to prevent duplicate ingestion runs
+create unique index if not exists bronze_openmeteo_hourly_unique_idx
+on bronze.openmeteo_hourly (mtn_id, pulled_at);
 
--- Creating lightining index table from OpenMeteo in Bronze schema
-drop table if exists bronze.openmeteo_lightning;
+
+-- ----------------------------
+-- bronze.openmeteo_lightning
+-- ----------------------------
+drop table if exists bronze.openmeteo_lightning cascade;
 
 create table bronze.openmeteo_lightning (
-	mtn_id INT,
-	latitude FLOAT NOT NULL,
-	longitude FLOAT NOT NULL,
-	elevation INT,
-	timezone VARCHAR(100),
-	timezone_abbreviation VARCHAR(5),
-	utc_offset_seconds INT,
-	pulled_at TIMESTAMPTZ NOT NULL,
-	lightning_forecast JSONB NOT NULL
+    mtn_id                  INT             REFERENCES bronze.wiki_mtns(mtn_id),
+    latitude                FLOAT           NOT NULL,
+    longitude               FLOAT           NOT NULL,
+    elevation               INT,
+    timezone                VARCHAR(100),
+    timezone_abbreviation   VARCHAR(5),
+    utc_offset_seconds      INT,
+    pulled_at               TIMESTAMPTZ     NOT NULL,
+    lightning_forecast      JSONB           NOT NULL
+);
+
+-- Unique index to prevent duplicate ingestion runs
+create unique index if not exists bronze_openmeteo_lightning_unique_idx
+on bronze.openmeteo_lightning (mtn_id, pulled_at);
+
+-- -------------------------
+-- bronze.api_call_log
+-- -------------------------
+drop table if exists bronze.api_call_log;
+ 
+create table bronze.api_call_log (
+    id              SERIAL          PRIMARY KEY,
+    called_at       TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
+    api_source      VARCHAR(50)     NOT NULL,   -- e.g. 'openmeteo', 'openweather'
+    endpoint        VARCHAR(200)    NOT NULL,
+    mtn_id          INT,                        -- null for non-summit calls (e.g. timezone enrichment)
+    status_code     INT,                        -- null if request threw an exception
+    response_ms     INT,                        -- round-trip time in milliseconds
+    success         BOOLEAN         NOT NULL,
+    error_message   TEXT                        -- null on success
 );
