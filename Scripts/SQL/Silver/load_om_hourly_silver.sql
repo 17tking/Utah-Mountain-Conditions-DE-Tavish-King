@@ -15,7 +15,7 @@ Notes:
 */
 
 insert into silver.openmeteo_hourly (
-    mtn_id, pulled_at, hrly_time,
+    mtn_id, measured_at_m, pulled_at, hrly_time,
     hrly_weather_code, hrly_rain_mm, hrly_showers_mm, hrly_snowfall_cm,
     hrly_snow_depth_m, hrly_precipitation_mm, hrly_precipitation_probability_pct,
     hrly_uv_index, hrly_is_day, hrly_visibility_m, hrly_cloud_cover_pct,
@@ -26,6 +26,7 @@ insert into silver.openmeteo_hourly (
 )
 select distinct on (mtn_id, (hourly_forecast -> 'hourly' -> 'time' ->> idx)::timestamp)
     mtn_id,
+    measured_at_m,
     pulled_at,
     (hourly_forecast -> 'hourly' -> 'time'                  ->> idx)::timestamp as hrly_time,
     (hourly_forecast -> 'hourly' -> 'weather_code'          ->> idx)::int        as hrly_weather_code,
@@ -63,6 +64,7 @@ where pulled_at::timestamp > coalesce(
 order by mtn_id, (hourly_forecast -> 'hourly' -> 'time' ->> idx)::timestamp, pulled_at desc
 on conflict (mtn_id, hrly_time)
 do update set
+    measured_at_m                       = excluded.measured_at_m,
     pulled_at                           = excluded.pulled_at,
     hrly_weather_code                   = excluded.hrly_weather_code,
     hrly_rain_mm                        = excluded.hrly_rain_mm,

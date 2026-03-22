@@ -17,9 +17,10 @@ Notes:
 
 */
 
-insert into silver.openmeteo_lightning (mtn_id, pulled_at, ltng_time, ltng_potential_j_kg)
+insert into silver.openmeteo_lightning (mtn_id, measured_at_m, pulled_at, ltng_time, ltng_potential_j_kg)
 select distinct on (mtn_id, (lightning_forecast -> 'minutely_15' -> 'time' ->> idx)::timestamp)
     mtn_id::int,
+    measured_at_m,
     pulled_at,
     (lightning_forecast -> 'minutely_15' -> 'time'              ->> idx)::timestamp as ltng_time,
     (lightning_forecast -> 'minutely_15' -> 'lightning_potential' ->> idx)::numeric  as ltng_potential_j_kg
@@ -35,5 +36,6 @@ where pulled_at::timestamp > coalesce(
 order by mtn_id, (lightning_forecast -> 'minutely_15' -> 'time' ->> idx)::timestamp, pulled_at desc
 on conflict (mtn_id, ltng_time)
 do update set
+    measured_at_m       = excluded.measured_at_m,
     pulled_at           = excluded.pulled_at,
     ltng_potential_j_kg = excluded.ltng_potential_j_kg;

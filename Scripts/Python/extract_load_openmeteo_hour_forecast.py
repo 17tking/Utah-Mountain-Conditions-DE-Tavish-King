@@ -93,7 +93,7 @@ def main():
         # Extract basic metadata for convenience
         latitude = raw_json.get("latitude")
         longitude = raw_json.get("longitude")
-        elevation = raw_json.get("elevation")
+        measured_at_m = raw_json.get("elevation")
         tz_name = raw_json.get("timezone")
         tz_abbrev = raw_json.get("timezone_abbreviation")
         utc_offset = raw_json.get("utc_offset_seconds")
@@ -107,7 +107,7 @@ def main():
             s["mtn_id"],
             latitude,
             longitude,
-            elevation,
+            measured_at_m,
             tz_name,
             tz_abbrev,
             utc_offset,
@@ -123,7 +123,7 @@ def main():
             mtn_id,
             latitude,
             longitude,
-            elevation,
+            measured_at_m,
             timezone,
             timezone_abbreviation,
             utc_offset_seconds,

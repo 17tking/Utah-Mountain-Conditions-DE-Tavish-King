@@ -60,8 +60,6 @@ create table silver.weathercodes (
 -- ----------------------------
 -- silver.openweather_alerts
 -- ----------------------------
--- Dropped serial alert_id_pk — (mtn_id, alert_event, alert_start) is the
--- natural unique key and is used as the upsert conflict target
 drop table if exists silver.openweather_alerts cascade;
 
 create table silver.openweather_alerts (
@@ -83,6 +81,7 @@ drop table if exists silver.openmeteo_daily cascade;
 
 create table silver.openmeteo_daily (
     mtn_id                                  INT             NOT NULL REFERENCES silver.wiki_mtns(mtn_id),
+    measured_at_m                           INT,
     pulled_at                               TIMESTAMPTZ,
     dly_time                                DATE            NOT NULL,
     dly_sunset                              TIMESTAMPTZ,
@@ -138,6 +137,7 @@ drop table if exists silver.openmeteo_hourly cascade;
 
 create table silver.openmeteo_hourly (
     mtn_id                          INT             NOT NULL REFERENCES silver.wiki_mtns(mtn_id),
+    measured_at_m                   INT,
     pulled_at                       TIMESTAMPTZ,
     hrly_time                       TIMESTAMP       NOT NULL,
     hrly_weather_code               INT             REFERENCES silver.weathercodes(weather_code),
@@ -174,6 +174,7 @@ drop table if exists silver.openmeteo_lightning cascade;
 
 create table silver.openmeteo_lightning (
     mtn_id              INT             NOT NULL REFERENCES silver.wiki_mtns(mtn_id),
+    measured_at_m       INT,
     pulled_at           TIMESTAMPTZ,
     ltng_time           TIMESTAMP       NOT NULL,
     ltng_potential_j_kg NUMERIC(10,2),

@@ -14,7 +14,7 @@ Note:
 */
 
 insert into silver.openmeteo_daily (
-    mtn_id, pulled_at, dly_time, dly_sunset, dly_sunrise,
+    mtn_id, measured_at_m, pulled_at, dly_time, dly_sunset, dly_sunrise,
     dly_weather_code, dly_rain_sum_mm, dly_showers_sum_mm, dly_snowfall_sum_cm,
     dly_uv_index_max, dly_visibility_max_m, dly_visibility_min_m, dly_visibility_mean_m,
     dly_cloud_cover_max_pct, dly_cloud_cover_min_pct, dly_cloud_cover_mean_pct,
@@ -31,6 +31,7 @@ insert into silver.openmeteo_daily (
 )
 select distinct on (mtn_id, (daily_forecast -> 'daily' -> 'time' ->> idx)::date)
     mtn_id,
+    measured_at_m,
     pulled_at,
     (daily_forecast -> 'daily' -> 'time'                        ->> idx)::date          as dly_time,
     (daily_forecast -> 'daily' -> 'sunset'                      ->> idx)::timestamptz   as dly_sunset,
@@ -87,6 +88,7 @@ where pulled_at::date > coalesce(
 order by mtn_id, (daily_forecast -> 'daily' -> 'time' ->> idx)::date, pulled_at desc
 on conflict (mtn_id, dly_time)
 do update set
+    measured_at_m                           = excluded.measured_elevation_m,
     pulled_at                               = excluded.pulled_at,
     dly_sunset                              = excluded.dly_sunset,
     dly_sunrise                             = excluded.dly_sunrise,
