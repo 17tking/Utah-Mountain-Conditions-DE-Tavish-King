@@ -14,7 +14,6 @@ venv_utahmountain/
 # Airflow
 logs/
 config/airflow.cfg
-*.cfg
 
 # R / RStudio
 .Rproj.user/
