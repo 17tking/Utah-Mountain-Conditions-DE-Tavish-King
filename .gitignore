@@ -1,16 +1,19 @@
 # Security
-venv_utahmountain/ 
 .env
+*.env
 
 # Python
 __pycache__/
 venv_utahmountain/
 .venv_utahmountain/
-*.env
 *.log
 *.pyc
 *.pyo
 *.pyd
+
+# Airflow
+logs/
+config/airflow.cfg
 
 # R / RStudio
 .Rproj.user/
