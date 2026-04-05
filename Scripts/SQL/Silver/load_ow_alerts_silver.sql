@@ -20,8 +20,8 @@ select
     mtn_id,
     alert ->> 'sender_name'                                       as alert_sender_name,
     alert ->> 'event'                                             as alert_event,
-    to_timestamp((alert ->> 'start')::bigint) at time zone 'UTC' as alert_start,
-    to_timestamp((alert ->> 'end')::bigint) at time zone 'UTC'   as alert_end,
+    to_timestamp((alert ->> 'start')::bigint) at time zone 'UTC'  as alert_start,
+    to_timestamp((alert ->> 'end')::bigint) at time zone 'UTC'    as alert_end,
     alert ->> 'description'                                       as alert_description,
     alert -> 'tags'                                               as alert_tags
 from bronze.openweather_alerts

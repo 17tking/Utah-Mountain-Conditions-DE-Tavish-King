@@ -13,9 +13,6 @@ from utils import get_summits, log_api_call  # custom function to retrieve summi
 # This script extracts 15-minutely lightning potential (LPI) forecasts for all summits listed from the Open-Meteo API.
 # It stores the raw JSON response along with basic metadata (latitude, longitude, elevation, timezone)
 # in the `bronze.openmeteo_lightning` PostgreSQL table.
-# 
-# This script is intended to run 23x/day starting at @ 12am and ending at 11pm to maintain 
-# up-to-date hourly forecast data.
 # =================================================================================================
  
  

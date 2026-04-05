@@ -88,7 +88,7 @@ where pulled_at::date > coalesce(
 order by mtn_id, (daily_forecast -> 'daily' -> 'time' ->> idx)::date, pulled_at desc
 on conflict (mtn_id, dly_time)
 do update set
-    measured_at_m                           = excluded.measured_elevation_m,
+    measured_at_m                           = excluded.measured_at_m,
     pulled_at                               = excluded.pulled_at,
     dly_sunset                              = excluded.dly_sunset,
     dly_sunrise                             = excluded.dly_sunrise,
