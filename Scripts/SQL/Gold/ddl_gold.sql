@@ -9,7 +9,7 @@ Script Purpose:
 
     This layer is intentionally expansive -- new tables should
     be added as reporting needs evolve (e.g., rapid forecasts,
-    anomaly flags, rolling aggregates).
+    anomaly flags, rolling aggregates. research questions, etc).
 
 Notes:
     - All gold tables should derive from silver layer sources.
