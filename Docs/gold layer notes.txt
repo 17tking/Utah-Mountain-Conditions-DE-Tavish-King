@@ -3,7 +3,7 @@
 # Info I want to have + Analyses to make me a well-informed hiker.
 # Predictions, Trends, Comparisons, and Statistics
 
--- DAILY --
+-- DAILY ☀️--
 
 # Data 1: **Rapid Snapshot Forecast**
 ------------------------------------------------
@@ -65,11 +65,23 @@ order by mtn_id;
 
 # Data 2: **Historical Precipitation**
 ------------------------------------------------
-Which mountains historically get the most precip.?
+Which mountains historically get the most avg precip.?
 ------------------------------------------------
 
+# Data 3: Hikeability
+--------------------------------------------------------
+Can I take important hiking factors and create a hikeability score?
+Predict future hikeability? (ML)
+--------------------------------------------------------
 
--- LIGHTNING --
+# Data 4: Storm Patterns
+--------------------------------------------------------
+What’s the typical storm frequency by month? 
+Which months are most volatile (high variance)?
+--------------------------------------------------------
+
+
+-- LIGHTNING ⚡️--
 
 # Data 1: **Historical Lightning Patterns**
 ------------------------------------------------
@@ -78,11 +90,16 @@ Which Mountains/Ranges have the highest lighnting potential?
 What conditions predict greater lightning potential?
 ------------------------------------------------
 
--- HOURLY --
+# Data 2: **Kings Peak, Timp, and Nebo Lightning Risk**
+--------------------------------------------------------
+When is the risk of lightning highest? Seasonal + Hours. 
+--------------------------------------------------------
+
+-- HOURLY ⏱️--
 
 # Data 1: **Hourly Forecast**
 ------------------------------------------------
-
+Designing an informative hourly dashboard
 ------------------------------------------------
 
 
