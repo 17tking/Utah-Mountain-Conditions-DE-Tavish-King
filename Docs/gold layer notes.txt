@@ -23,6 +23,7 @@ SQL - Logic
 select omd.mtn_id,
 	   wm.mtn_name,
 	   wm.mtn_range,
+	   omd.pulled_at,
 	   omd.dly_time,
 	   omd.measured_at_m,
 	   alerts.alert_count,

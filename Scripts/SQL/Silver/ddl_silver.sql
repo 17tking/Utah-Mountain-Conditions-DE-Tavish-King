@@ -177,6 +177,7 @@ create table silver.openmeteo_lightning (
     measured_at_m       INT,
     pulled_at           TIMESTAMPTZ,
     ltng_time           TIMESTAMP       NOT NULL,
-    ltng_potential_j_kg NUMERIC(10,2),
+    ltng_potential_j_kg_max NUMERIC(10,2),
+	ltng_potential_j_kg_mean NUMERIC(10,2),
     PRIMARY KEY (mtn_id, ltng_time)
 );

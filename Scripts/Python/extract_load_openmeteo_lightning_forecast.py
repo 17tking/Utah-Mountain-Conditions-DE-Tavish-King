@@ -33,7 +33,7 @@ def main():
         "minutely_15": "lightning_potential",
         "timezone": "auto",
         "forecast_days": 1,
-        "forecast_minutely_15": 96,
+        "forecast_minutely_15": 92 #24 hours
     }
  
     # ------------------
@@ -61,7 +61,7 @@ def main():
         start = time.time()
         r = call_api_with_retry(meteo_url, params)
         elapsed_ms = round((time.time() - start) * 1000)
-        time.sleep(5)
+        time.sleep(3)
  
         log_api_call(
             api_source='openmeteo',
