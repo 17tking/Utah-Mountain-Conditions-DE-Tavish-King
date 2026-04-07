@@ -63,22 +63,25 @@ where dly_time = current_date
 order by mtn_id;
 
 
-# Data 2: **Historical Precipitation**
-------------------------------------------------
-Which mountains historically get the most avg precip.?
-------------------------------------------------
-
-# Data 3: Hikeability
+# Data 2: Hikeability
 --------------------------------------------------------
 Can I take important hiking factors and create a hikeability score?
-Predict future hikeability? (ML)
+Predict future hikeability? (ML).
+7 day forecast.
 --------------------------------------------------------
+- Mtn Info
+- Dates
+- Weather Info 
 
-# Data 4: Storm Patterns
+
+# Data 3: **Mountain Storm Patterns by Month/Season**
 --------------------------------------------------------
 What’s the typical storm frequency by month? 
 Which months are most volatile (high variance)?
 --------------------------------------------------------
+- Mtn Info
+- Dates
+- Storm Data (what constitutes that?)
 
 
 -- LIGHTNING ⚡️--
@@ -90,10 +93,12 @@ Which Mountains/Ranges have the highest lighnting potential?
 What conditions predict greater lightning potential?
 ------------------------------------------------
 
+
 # Data 2: **Kings Peak, Timp, and Nebo Lightning Risk**
 --------------------------------------------------------
 When is the risk of lightning highest? Seasonal + Hours. 
 --------------------------------------------------------
+
 
 -- HOURLY ⏱️--
 
@@ -101,5 +106,27 @@ When is the risk of lightning highest? Seasonal + Hours.
 ------------------------------------------------
 Designing an informative hourly dashboard
 ------------------------------------------------
+- Mtn Info
+- Dates
+- Weather Info
+
+
+# Data 2: **Mountain Storm Patterns by Day**
+------------------------------------------------
+When is precipitation most likely in a given day?
+------------------------------------------------
+- Mtn Info 
+- Dates
+- Precipitation (snow, rain, showers)
+
+
+# Data 3: **Snow Depth Changes**
+------------------------------------------------
+Daily/Hourly changes in snow depth across mountains?
+Based on SNOTEL sites in Utah (8000ft - Peak)
+------------------------------------------------
+- Mtn Info 
+- Dates
+- Snow Depth
 
 

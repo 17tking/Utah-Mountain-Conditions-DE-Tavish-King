@@ -1,6 +1,7 @@
 import psycopg2
 import os
 import time
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -42,6 +43,26 @@ def get_summits():
         {"mtn_id": r[0], "latitude": float(r[1]), "longitude": float(r[2])}
         for r in rows
     ]
+
+
+# -----------------------------------------
+# Retry Logic
+# -----------------------------------------
+def call_api_with_retry(url, params, retries=3, backoff=60):
+    for attempt in range(retries):
+        r = requests.get(url, params=params, timeout=10)
+        if r.status_code == 200:
+            return r
+        elif r.status_code == 429:
+            if attempt < retries - 1:
+                print(f"Rate limited (429). Waiting {backoff}s before retry {attempt + 1}/{retries - 1}...")
+                time.sleep(backoff)
+            else:
+                print(f"Rate limited (429). No retries left.")
+                return r
+        else:
+            return r
+    return r
 
 
 # -----------------------------------------

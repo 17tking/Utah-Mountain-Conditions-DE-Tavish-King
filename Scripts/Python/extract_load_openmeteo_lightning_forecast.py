@@ -7,7 +7,7 @@ import os
 import json
 import time
 import copy
-from utils import get_summits, log_api_call  # custom function to retrieve summits list
+from utils import get_summits, log_api_call, call_api_with_retry  # custom function to retrieve summits list
 
 # ===============================================================================================
 # This script extracts 15-minutely lightning potential (LPI) forecasts for all summits listed from the Open-Meteo API.
@@ -60,9 +60,9 @@ def main():
         # Make request to Open-Meteo API
         
         start = time.time()
-        r = requests.get(meteo_url, params=params, timeout=10)
+        r = call_api_with_retry(meteo_url, params)
         elapsed_ms = round((time.time() - start) * 1000)
-        time.sleep(1)
+        time.sleep(5)
  
         log_api_call(
             api_source='openmeteo',
