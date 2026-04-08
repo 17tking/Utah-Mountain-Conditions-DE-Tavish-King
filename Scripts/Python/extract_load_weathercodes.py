@@ -17,7 +17,7 @@ def main():
     load_dotenv()
 
     # Load weather code data from local JSON
-    with open("Wiki Data/descriptions.json", "r", encoding="utf-8") as f:
+    with open("weather_codes/descriptions.json", "r", encoding="utf-8") as f:
         weathercodes = json.load(f)
 
     rows = []
