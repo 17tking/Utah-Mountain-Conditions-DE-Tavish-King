@@ -38,7 +38,6 @@ create table silver.wiki_mtns (
     isol_km     DECIMAL(6,2),
     latitude    DECIMAL(9,6)    NOT NULL CHECK (latitude BETWEEN -90 AND 90),
     longitude   DECIMAL(9,6)    NOT NULL CHECK (longitude BETWEEN -180 AND 180),
-    elevation_m INT             CHECK (elevation_m > 0),
     timezone    VARCHAR(50)
 );
 
