@@ -1,5 +1,5 @@
 ![Kings Peak](Docs/images/Kings.Peak.jpg)
-*Utah's tallest mountain, King's Peak, stands at an elevation of 4125m (13,528ft)!*
+*Utah's tallest mountain, **King's Peak** (background), stands at an elevation of 4125m (13,528ft)!*
 
 
 ## Welcome!
@@ -16,7 +16,7 @@ The database follows the **medallion architecture** (Bronze -> Silver -> Gold) s
 ![DWH Layers](Docs/diagrams/DWH%20Layers.png)
 
 ### Data Flow
-![Data Flow]()
+![Data Flow](Docs/diagrams/Data%20Flow%20-%20Utah%20Mountains.drawio.png)
 
 **Data Sources:**
 - Wikipedia: Top 50 Highest Summits/Mountains in Utah
@@ -27,9 +27,9 @@ The database follows the **medallion architecture** (Bronze -> Silver -> Gold) s
 ### Data
 The complete data catalog can be found in these markdown files:
 
-[Bronze Schema](Docs/diagrams/bronze_schema.md)
-[Silver Schema](Docs/diagrams/silver_schema.md)
-[Gold Schema](Docs/diagrams/gold_schema.md)
+- [Bronze Schema](Docs/diagrams/bronze_schema.md)
+- [Silver Schema](Docs/diagrams/silver_schema.md)
+- [Gold Schema](Docs/diagrams/gold_schema.md)
 
 ### Incremental Logic
 All bronze-to-silver transformations use incremental processing to efficiently handle new data while preventing duplicates. The pipeline compares the `pulled_at` timestamp from bronze against the maximum `pulled_at` in silver using a `>` filter, ensuring no records are missed when multiple pulls share the same timestamp.
