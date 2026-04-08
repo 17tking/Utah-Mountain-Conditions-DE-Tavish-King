@@ -50,23 +50,33 @@ def get_summits():
 # -----------------------------------------
 def call_api_with_retry(url, params, retries=3, backoff=60):
     for attempt in range(retries):
-        r = requests.get(url, params=params, timeout=10)
-        if r.status_code == 200:
-            return r
-        
-        if attempt < retries - 1:
-            if r.status_code == 429:
-                wait = backoff
-            elif r.status_code in (502, 503, 504):
-                wait = 30
+        try:
+            r = requests.get(url, params=params, timeout=10)
+            if r.status_code == 200:
+                return r
+            
+            if attempt < retries - 1:
+                if r.status_code == 429:
+                    wait = backoff
+                elif r.status_code in (502, 503, 504):
+                    wait = 30
+                else:
+                    wait = 15
+                print(f"Status {r.status_code} on attempt {attempt + 1}/{retries}. Waiting {wait}s before retry...")
+                time.sleep(wait)
             else:
-                wait = 15
-            print(f"Status {r.status_code} on attempt {attempt + 1}/{retries}. Waiting {wait}s before retry...")
-            time.sleep(wait)
-        else:
-            print(f"Status {r.status_code}. No retries left.")
-    
-    return r
+                print(f"Status {r.status_code}. No retries left.")
+                return r
+
+        except requests.exceptions.Timeout:
+            if attempt < retries - 1:
+                print(f"Request timed out on attempt {attempt + 1}/{retries}. Waiting 30s before retry...")
+                time.sleep(30)
+            else:
+                print(f"Request timed out. No retries left.")
+                return None
+
+    return None
 
 
 # -----------------------------------------

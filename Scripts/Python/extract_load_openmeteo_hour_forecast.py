@@ -66,7 +66,6 @@ def main():
         params["longitude"] = s["longitude"]
  
         # Make request to Open-Meteo API
-        
         start = time.time()
         r = call_api_with_retry(meteo_url, params)
         elapsed_ms = round((time.time() - start) * 1000)
@@ -81,7 +80,7 @@ def main():
             success=r.status_code == 200
         )
 
-        if r.status_code != 200:
+        if r is None or r.status_code != 200:
             print(f"Failed for summit mtn_id={s['mtn_id']} — status {r.status_code}")
             print(f"Response: {r.text}")
             failed_summits.append(s["mtn_id"])
