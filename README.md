@@ -19,10 +19,10 @@ The database follows the **medallion architecture** (Bronze -> Silver -> Gold) s
 ![Data Flow](Docs/diagrams/Data%20Flow%20-%20Utah%20Mountains.drawio.png)
 
 **Data Sources:**
-- Wikipedia: Top 50 Highest Summits/Mountains in Utah
-- Weather Codes: https://gist.github.com/stellasphere/9490c195ed2b53c707087c8c2db4ec0c
-- OpenMeteo API: Daily (7-day forecast), Hourly (24-hour forecast), and 15-minute Lightning Potential data
-- OpenWeather API: Live weather alerts
+- **Wikipedia**: Top 50 Highest Summits/Mountains in Utah
+- **Weather Codes**: https://gist.github.com/stellasphere/9490c195ed2b53c707087c8c2db4ec0c
+- **OpenMeteo API**: Daily (7-day forecast), Hourly (24-hour forecast), and 15-minute Lightning Potential data
+- **OpenWeather API**: Live weather alerts
 
 ### Data
 The complete data catalog can be found in these markdown files:
