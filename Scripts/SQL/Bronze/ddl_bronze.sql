@@ -131,20 +131,3 @@ create table bronze.openmeteo_lightning (
 -- Unique index to prevent duplicate ingestion runs
 create unique index if not exists bronze_openmeteo_lightning_unique_idx
 on bronze.openmeteo_lightning (mtn_id, pulled_at);
-
--- -------------------------
--- bronze.api_call_log
--- -------------------------
-drop table if exists bronze.api_call_log;
- 
-create table bronze.api_call_log (
-    id              SERIAL          PRIMARY KEY,
-    called_at       TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
-    api_source      VARCHAR(50)     NOT NULL,   -- e.g. 'openmeteo', 'openweather'
-    endpoint        VARCHAR(200)    NOT NULL,
-    mtn_id          INT,                        -- null for non-summit calls (e.g. timezone enrichment)
-    status_code     INT,                        -- null if request threw an exception
-    response_ms     INT,                        -- round-trip time in milliseconds
-    success         BOOLEAN         NOT NULL,
-    error_message   TEXT                        -- null on success
-);

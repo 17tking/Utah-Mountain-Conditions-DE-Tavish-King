@@ -82,7 +82,7 @@ def call_api_with_retry(url, params, retries=3, backoff=60):
 # -----------------------------------------
 # API call logger
 # -----------------------------------------
-# Logs each API call to bronze.api_call_log.
+# Logs each API call to meta.api_call_log.
 #
 # Usage — wrap your requests.get() like this:
 #
@@ -116,7 +116,7 @@ def log_api_call(
         conn = _get_conn()
         cur = conn.cursor()
         cur.execute("""
-            INSERT INTO bronze.api_call_log (
+            INSERT INTO meta.api_call_log (
                 api_source,
                 endpoint,
                 mtn_id,

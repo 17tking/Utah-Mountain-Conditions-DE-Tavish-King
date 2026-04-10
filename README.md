@@ -40,6 +40,9 @@ This approach allows the pipeline to safely rerun without creating duplicates wh
 ### Apache Airflow Orchestration
 *Describe my DAG structure, scheduling intervals, task dependencies, monitoring/alerting setup*
 
+**'load_task_instances.py'** = Runs automatically at 2am every night. Fetches all task instances across all DAGs. Upserts them into meta.task_instances. 
+
+
 ### Insights
 *Describe some interesting insights from data analysis*
 
