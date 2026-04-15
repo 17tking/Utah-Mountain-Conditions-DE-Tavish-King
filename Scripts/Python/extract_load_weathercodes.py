@@ -12,7 +12,6 @@ from dotenv import load_dotenv
 # if accidentally re-run.
 # ===============================================================================================
 
-
 def main():
     load_dotenv()
 
@@ -26,7 +25,6 @@ def main():
         for time_of_day, values in tod_data.items():
             rows.append((
                 weather_code,
-                time_of_day,
                 values["description"],
                 values["image"]
             ))
@@ -37,7 +35,6 @@ def main():
     insert_weathercodes_query = """
         INSERT INTO silver.weathercodes (
             weather_code,
-            time_of_day,
             description,
             image_url
         )

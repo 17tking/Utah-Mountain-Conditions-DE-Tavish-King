@@ -1,22 +1,14 @@
 {
 	"0":{
 		"day":{
-			"description":"Sunny",
+			"description":"Sunny/Clear",
 			"image":"http://openweathermap.org/img/wn/01d@2x.png"
-		},
-		"night":{
-			"description":"Clear",
-			"image":"http://openweathermap.org/img/wn/01n@2x.png"
 		}
 	},
 	"1":{
 		"day":{
-			"description":"Mainly Sunny",
+			"description":"Mainly Sunny/Clear",
 			"image":"http://openweathermap.org/img/wn/01d@2x.png"
-		},
-		"night":{
-			"description":"Mainly Clear",
-			"image":"http://openweathermap.org/img/wn/01n@2x.png"
 		}
 	},
 	"2":{

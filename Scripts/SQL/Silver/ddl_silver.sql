@@ -49,7 +49,6 @@ drop table if exists silver.weathercodes cascade;
 
 create table silver.weathercodes (
     weather_code    INT         NOT NULL,
-    time_of_day     VARCHAR(5)  NOT NULL CHECK (time_of_day IN ('day', 'night')),
     description     TEXT        NOT NULL,
     image_url       TEXT        NOT NULL,
     PRIMARY KEY (weather_code)
