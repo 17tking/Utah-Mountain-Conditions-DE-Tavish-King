@@ -61,6 +61,8 @@ This approach allows the pipeline to safely rerun without creating duplicates wh
 
 **Git/GitHub**: Version control and project documentation.
 
+## Get Started
+
 
 ## Repository Structure
 
