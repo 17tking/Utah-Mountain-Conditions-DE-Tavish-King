@@ -166,7 +166,7 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-
+  #comment out!!!
   airflow-worker:
     <<: *airflow-common
     command: celery worker
@@ -189,7 +189,7 @@ services:
         condition: service_healthy
       airflow-init:
         condition: service_completed_successfully
-
+  #comment out!!!
   airflow-triggerer:
     <<: *airflow-common
     command: triggerer
