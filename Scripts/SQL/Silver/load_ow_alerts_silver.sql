@@ -24,7 +24,7 @@ select
     to_timestamp((alert ->> 'end')::bigint) at time zone 'UTC'    as alert_end,
     alert ->> 'description'                                       as alert_description,
     alert -> 'tags'                                               as alert_tags
-from bronze.openweather_alerts
+from bronze.openweather_alert
 where alert is not null
 on conflict (mtn_id, alert_event, alert_start) do update set
     alert_end         = excluded.alert_end,

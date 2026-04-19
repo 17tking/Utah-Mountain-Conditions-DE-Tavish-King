@@ -49,7 +49,6 @@ create table bronze.wiki_mtns (
 drop table if exists bronze.openweather_alerts cascade;
 
 create table bronze.openweather_alerts (
-    id          SERIAL          PRIMARY KEY,
     mtn_id      INT             REFERENCES bronze.wiki_mtns(mtn_id),
     latitude    FLOAT           NOT NULL,
     longitude   FLOAT           NOT NULL,
