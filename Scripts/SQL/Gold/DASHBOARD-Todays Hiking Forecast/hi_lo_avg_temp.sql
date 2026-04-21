@@ -1,4 +1,4 @@
--- Getting the average, hi, and lo temp of the current day
+-- Getting the average, hi, and lo temp in fahrenheit of the current date
 --
 select omd.mtn_id,
 	   wiki_mtns.mtn_name,

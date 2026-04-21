@@ -1,21 +1,19 @@
-# Gold Layer Notes
-# How will data need to be ingested/collected?
-# Info I want to have + Analyses to make me a well-informed hiker.
-# Predictions, Trends, Comparisons, and Statistics
-
--- DAILY ☀️--
-
-# Data 1: **Rapid Snapshot Forecast**
-GOLD -> DASHBOARD
+DAHBOARD-Todays Forecast
+Loc: Metabase
 ------------------------------------------------
 What are the most important details for a rapid forecast check the day of a hike?
 ------------------------------------------------
-Metrics:
-	- 
-
-------------------------------------------------
-SQL - Logic
-------------------------------------------------
+Filters:
+	- {{Mountain}} 
+		* Field Filter: wiki_mtns.mtn_name
+		* Alias Value: wiki_mtns.mtn_name
+		* (default value=King's Peak)
+		* Dropdown
+		* Single select
+		* Always require a value
+Queries:
+	- hi_lo_avg_temps.sql
+	- measured_at.sql
 select omd.mtn_id,
 	   wm.mtn_name,
 	   wm.mtn_range,
@@ -61,36 +59,25 @@ order by mtn_id;
 
 
 # Data 2: Hikeability
-SILVER -> PYTHON -> GOLD -> DASHBOARD
 --------------------------------------------------------
 Can I take important hiking factors and create a hikeability score?
 Predict future hikeability? (ML). 7 day forecast.
 --------------------------------------------------------
-Metrics:
-	- 
-
 
 
 # Data 3: **Mountain Storm Patterns by Month/Season**
-GOLD -> 
 --------------------------------------------------------
 What’s the typical storm frequency by month? 
 Which months are most volatile (high variance)?
 --------------------------------------------------------
 
 
-
 # Data 4: **30 Day KPIs**
-GOLD -> DASHBOARD
 -------------------------------------------
 1-month view into past weather variables
 (precipitation, humidity, wind, temp, hPa)
 -------------------------------------------
-Metrics:
-	- 
-	
 
--- LIGHTNING ⚡️--
 
 # Data 1: **Historical Lightning Patterns**
 ------------------------------------------------
@@ -106,20 +93,13 @@ When is the risk of lightning highest? Seasonal + Hours.
 --------------------------------------------------------
 
 
--- HOURLY ⏱️--
-
 # Data 1: **Hourly Forecast**
-GOLD -> DASHBOARD
 ------------------------------------------------
 Designing an informative hourly dashboard
 ------------------------------------------------
-Metrics:
-	- 
-
 
 
 # Data 2: **Mountain Storm Patterns by Day**
-GOLD ->
 ------------------------------------------------
 When is precipitation most likely in a given day?
 ------------------------------------------------
