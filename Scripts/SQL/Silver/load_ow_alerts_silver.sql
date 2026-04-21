@@ -15,16 +15,17 @@ Notes:
 
 */
 
-insert into silver.openweather_alerts (mtn_id, alert_sender_name, alert_event, alert_start, alert_end, alert_description, alert_tags)
+insert into silver.openweather_alerts (mtn_id, alert_pulled_at, alert_sender_name, alert_event, alert_start, alert_end, alert_description, alert_tags)
 select
     mtn_id,
-    alert ->> 'sender_name'                                       as alert_sender_name,
-    alert ->> 'event'                                             as alert_event,
-    to_timestamp((alert ->> 'start')::bigint) at time zone 'UTC'  as alert_start,
-    to_timestamp((alert ->> 'end')::bigint) at time zone 'UTC'    as alert_end,
-    alert ->> 'description'                                       as alert_description,
-    alert -> 'tags'                                               as alert_tags
-from bronze.openweather_alert
+	pulled_at													   				as alert_pulled_at,
+    alert ->> 'sender_name'                                       				as alert_sender_name,
+    alert ->> 'event'                                             				as alert_event,
+    to_timestamp((alert ->> 'start')::bigint) at time zone 'America/Denver'	as alert_start,
+    to_timestamp((alert ->> 'end')::bigint) at time zone 'America/Denver' 	 	as alert_end,
+    alert ->> 'description'                                       				as alert_description,
+    alert -> 'tags'                                               				as alert_tags
+from bronze.openweather_alerts
 where alert is not null
 on conflict (mtn_id, alert_event, alert_start) do update set
     alert_end         = excluded.alert_end,

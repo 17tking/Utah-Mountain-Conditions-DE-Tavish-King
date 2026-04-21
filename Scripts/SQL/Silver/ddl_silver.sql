@@ -62,6 +62,7 @@ drop table if exists silver.openweather_alerts cascade;
 
 create table silver.openweather_alerts (
     mtn_id              INT             NOT NULL REFERENCES silver.wiki_mtns(mtn_id),
+	alert_pulled_at     TIMESTAMPTZ,
     alert_sender_name   TEXT,
     alert_event         TEXT            NOT NULL,
     alert_start         TIMESTAMPTZ     NOT NULL,

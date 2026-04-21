@@ -99,7 +99,7 @@ def load_alerts_to_postgres(results):
     cur = conn.cursor()
 
     insert_alerts_query = """
-        INSERT INTO bronze.openweather_alert (mtn_id, latitude, longitude, pulled_at, alert)
+        INSERT INTO bronze.openweather_alerts (mtn_id, latitude, longitude, pulled_at, alert)
         VALUES %s
         ON CONFLICT DO NOTHING
     """
@@ -119,7 +119,7 @@ def load_alerts_to_postgres(results):
     try:
         execute_values(cur, insert_alerts_query, values)
         conn.commit()
-        print(f"Sick! {cur.rowcount} new alerts inserted into bronze.openweather_alert")
+        print(f"Sick! {cur.rowcount} new alerts inserted into bronze.openweather_alerts")
     except Exception as e:
         conn.rollback()
         print(f"Error inserting alerts: {e}")

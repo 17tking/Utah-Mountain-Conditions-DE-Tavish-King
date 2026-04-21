@@ -53,8 +53,8 @@ Active weather alerts per mountain sourced from the OpenWeather API. One row per
 | `mtn_id` | INT | NOT NULL, FK → wiki_mtns | Mountain identifier |
 | `alert_sender_name` | TEXT | | Name of the alert issuing agency |
 | `alert_event` | TEXT | NOT NULL | Alert event type (e.g. "Wind Advisory") |
-| `alert_start` | TIMESTAMPTZ | NOT NULL | Alert start time (MT) |
-| `alert_end` | TIMESTAMPTZ | NOT NULL, CHECK >= alert_start | Alert end time (MT) |
+| `alert_start` | TIMESTAMPTZ | NOT NULL | Alert start time (America/Denver) |
+| `alert_end` | TIMESTAMPTZ | NOT NULL, CHECK >= alert_start | Alert end time (America/Denver) |
 | `alert_description` | TEXT | CHECK length <= 5000 | Full alert description text |
 | `alert_tags` | JSONB | | Additional alert tags from API |
 
