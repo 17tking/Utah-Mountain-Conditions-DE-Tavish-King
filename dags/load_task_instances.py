@@ -6,8 +6,12 @@ import requests
 import os
 import psycopg2
 from dotenv import load_dotenv
+import pendulum
 
 load_dotenv()
+
+local_tz = pendulum.timezone("America/Denver")
+
 
 ENDPOINT_URL = "http://airflow-apiserver:8080"
 
@@ -93,8 +97,8 @@ def run_load_task_instances():
 # DAG for load_task_instances
 with DAG(
     dag_id="load_task_instances",
-    schedule="0 2 * * *",
-    start_date=datetime(2025, 1, 1, tzinfo=timezone.utc),
+    schedule="0 4 * * *",
+    start_date=datetime(2025, 1, 1, tzinfo=local_tz),
     catchup=False,
     tags=["meta"],
 ) as dag:
