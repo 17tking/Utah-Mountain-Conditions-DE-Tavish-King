@@ -1,0 +1,51 @@
+"mtn_id","mtn_name","mtn_range","elev_ft","elev_m","prom_ft","prom_m","isol_mi","isol_km","latitude","longitude","timezone"
+1,"Kings Peak","Uinta Mountains",13529,4124,6349,1935,"166.60","268.00","40.776400","-110.373000",NULL
+2,"South Kings Peak","Uinta Mountains",13517,4120,352,107,"0.80","1.29","40.765900","-110.377900",NULL
+3,"Gilbert Peak","Uinta Mountains",13447,4099,1559,475,"3.60","5.79","40.823500","-110.340000",NULL
+4,"Mount Emmons","Uinta Mountains",13445,4098,913,278,"5.40","8.69","40.711800","-110.303800",NULL
+5,"Painter Peak","Uinta Mountains",13389,4081,317,97,"1.30","2.09","40.753100","-110.358900",NULL
+6,"Roberts Peak","Uinta Mountains",13297,4053,560,171,"1.60","2.57","40.735600","-110.339200",NULL
+7,"Henrys Fork Peak","Uinta Mountains",13273,4046,553,169,"1.10","1.77","40.787900","-110.389800",NULL
+8,"Gunsight Peak","Uinta Mountains",13271,4045,637,194,"1.40","2.25","40.803400","-110.352800",NULL
+9,"Trail Rider Peak","Uinta Mountains",13255,4040,357,109,"0.70","1.13","40.742200","-110.352600",NULL
+10,"Mount Lovenia","Uinta Mountains",13224,4031,1477,450,"11.60","18.67","40.756800","-110.607100",NULL
+11,"Tokewanna Peak","Uinta Mountains",13169,4014,1291,393,"3.80","6.12","40.810000","-110.623700",NULL
+12,"Wasatch Peak","Uinta Mountains",13159,4011,862,263,"1.80","2.90","40.783300","-110.623800",NULL
+13,"Mount Powell","Uinta Mountains",13156,4010,813,248,"0.20","0.32","40.795300","-110.424900",NULL
+14,"Dome Peak","Uinta Mountains",13100,3993,644,196,"0.90","1.45","40.792700","-110.366700",NULL
+15,"Pinnacle Peak","Uinta Mountains",13090,3990,479,146,"0.80","1.29","40.722500","-110.317800",NULL
+16,"Wilson Peak","Uinta Mountains",13058,3980,1305,398,"2.20","3.54","40.775900","-110.461700",NULL
+17,"Quandary Peak","Uinta Mountains",13037,3974,821,250,"1.20","1.93","40.762700","-110.583200",NULL
+18,"Squaw Benchmark","Uinta Mountains",12995,3961,819,250,"1.60","2.57","40.785800","-110.490300",NULL
+19,"Porcupine Mountain","Uinta Mountains",12890,3929,662,202,"0.90","1.45","40.761600","-110.473400",NULL
+20,"Central Blacks Fork Peak","Uinta Mountains",12867,3922,1060,323,"2.10","3.38","40.779800","-110.549100",NULL
+21,"Kweeyahgut Peak","Uinta Mountains",12860,3920,982,299,"4.20","6.76","40.700400","-110.643300",NULL
+22,"South Red Castle Peak","Uinta Mountains",12828,3910,500,152,"1.00","1.61","40.790600","-110.460500",NULL
+23,"Moose Peak","Uinta Mountains",12799,3901,489,149,"2.00","3.22","40.817300","-110.500700",NULL
+24,"East Wilson Peak","Uinta Mountains",12775,3894,431,131,"0.60","0.97","40.770200","-110.451400",NULL
+25,"South Blacks Fork Peak","Uinta Mountains",12772,3893,350,107,"0.50","0.80","40.773700","-110.547000",NULL
+26,"Northwest Blacks Fork Peak","Uinta Mountains",12751,3887,317,97,"0.70","1.13","40.796700","-110.557800",NULL
+27,"South Burro Peak","Uinta Mountains",12733,3881,798,243,"7.10","11.43","40.831900","-110.182700",NULL
+28,"South Porcupine Mountain","Uinta Mountains",12730,3880,398,121,"0.70","1.13","40.753500","-110.482800",NULL
+29,"Mount Peale","La Sal Mountains",12726,3879,6167,1880,"72.80","117.20","38.438500","-109.229200",NULL
+30,"LaMotte Peak","Uinta Mountains",12726,3879,1149,350,"6.00","9.66","40.773700","-110.752000",NULL
+31,"Ostler Peak","Uinta Mountains",12725,3879,1175,358,"2.10","3.38","40.746600","-110.768900",NULL
+32,"Explorer Peak","Uinta Mountains",12713,3875,709,216,"1.20","1.93","40.718300","-110.643900",NULL
+33,"Yard Peak","Uinta Mountains",12710,3874,1105,337,"2.50","4.02","40.752700","-110.713400",NULL
+34,"Stone Benchmark","Uinta Mountains",12710,3874,644,196,"1.80","2.90","40.733600","-110.505600",NULL
+35,"North Timothy Peak","Uinta Mountains",12696,3870,407,124,"1.00","1.61","40.728100","-110.373600",NULL
+36,"Red Castle","Uinta Mountains",12676,3864,460,140,"0.50","0.80","40.798700","-110.465800",NULL
+37,"East Burnt Fork Peak","Uinta Mountains",12673,3863,1369,417,"4.10","6.60","40.810900","-110.109000",NULL
+38,"South Timothy Peak","Uinta Mountains",12654,3857,464,141,"0.90","1.45","40.715600","-110.376600",NULL
+39,"Mount Mellenthin","La Sal Mountains",12651,3856,689,210,"1.70","2.74","38.463300","-109.233900",NULL
+40,"North Allsop Peak","Uinta Mountains",12635,3851,981,299,"2.10","3.38","40.773300","-110.682800",NULL
+41,"Dead Horse Peak","Uinta Mountains",12631,3850,743,226,"1.30","2.09","40.743300","-110.692700",NULL
+42,"Cleveland Peak","Uinta Mountains",12595,3839,385,117,"0.90","1.45","40.687500","-110.629700",NULL
+43,"Mount Beulah","Uinta Mountains",12561,3829,728,222,"1.40","2.25","40.794000","-110.682000",NULL
+44,"Meadow Peak","Uinta Mountains",12551,3826,551,168,"2.00","3.22","40.749300","-110.647100",NULL
+45,"Spread Eagle Peak","Uinta Mountains",12546,3824,838,255,"1.10","1.77","40.729700","-110.783600",NULL
+46,"Oweep Peak","Uinta Mountains",12536,3821,469,143,"1.20","1.93","40.764000","-110.515600",NULL
+47,"Cleve Peak","Uinta Mountains",12526,3818,1144,349,"3.20","5.15","40.765300","-110.136000",NULL
+48,"Val Benchmark Peak","Uinta Mountains",12512,3814,784,239,"2.70","4.35","40.760600","-110.288700",NULL
+49,"South Yard Peak","Uinta Mountains",12503,3811,420,128,"0.50","0.80","40.745500","-110.721400",NULL
+50,"Mount Tukuhnikivatz","La Sal Mountains",12484,3805,756,230,"1.50","2.41","38.439500","-109.259800",NULL
