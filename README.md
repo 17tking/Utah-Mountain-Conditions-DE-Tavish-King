@@ -85,7 +85,6 @@ Utah-Mountain-Conditions-DE/
 │   ├── airflow+practice/       # airflow practice templates to refer to
 │   ├── notes/                  # Doc listing the data sources used with URLs 
 │   ├── .gitkeep                # 
-│   ├── wiki_mtns.csv           # File containing all mountains collecting data in the project
 │
 ├── Scripts/                    # Scripts for ETL/ELT processes and analyses
 │   ├── Python                  # Python scripts
@@ -98,7 +97,8 @@ Utah-Mountain-Conditions-DE/
 ├── .gitignore                  # Private info to be ignored by git
 ├── requirements.txt            # Dependencies and requirements used for the project
 ├── docker-compose.yaml         # Docker Compose file to define airflow container 
-├── .env.example                # .env example with how I set up my hidden .env     
+├── .env.example                # .env example with how I set up my hidden .env 
+├── wiki_mtns.csv               # File containing all current mountains collecting data in the project    
 ```
 
 ## Author

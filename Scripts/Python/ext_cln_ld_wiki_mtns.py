@@ -59,6 +59,7 @@ def extract_wiki_mtns():
     print(f"Extracted {len(raw_mtns)} rows from Wikipedia.")
     return raw_mtns
 
+    
 
 # ----------------
 # Step 2: Clean
@@ -177,6 +178,7 @@ def enrich_with_timezone(clean_mtns):
     else:
         print(f"Timezones fetched for all {len(clean_mtns)} summits.")
  
+    clean_mtns.to_csv('wiki_mtns.csv', index=False)
     return clean_mtns
 
 
@@ -192,7 +194,7 @@ def load_wiki_mtns(clean_mtns):
         dbname=os.getenv('DB_NAME'),
         user=os.getenv('DB_USERNAME'),
         password=os.getenv('DB_PASSWORD'),
-        host=os.getenv('DB_HOST'),
+        host=os.getenv('localhost'),
         port=os.getenv('DB_PORT')
     )
     cur = conn.cursor()
