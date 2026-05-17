@@ -43,11 +43,11 @@ def main():
     """
 
     conn = psycopg2.connect(
-        host=os.getenv("host"),
-        dbname=os.getenv("database"),
-        user=os.getenv("user"),
-        password=os.getenv("password"),
-        port=os.getenv("port")
+        dbname=os.getenv('DB_NAME'),
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
     )
     cur = conn.cursor()
 

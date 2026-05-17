@@ -22,7 +22,7 @@ from utils import get_summits
 
 load_dotenv()
 
-OW_KEY = os.getenv('owkey')
+OWKEY = os.getenv('OWKEY')
 
 
 # ------------
@@ -31,7 +31,7 @@ OW_KEY = os.getenv('owkey')
 def fetch_alerts(latitude, longitude):
     ow_url = (
         f"https://api.openweathermap.org/data/3.0/onecall?"
-        f"lat={latitude}&lon={longitude}&exclude=current,minutely,hourly,daily&appid={OW_KEY}"
+        f"lat={latitude}&lon={longitude}&exclude=current,minutely,hourly,daily&appid={OWKEY}"
     )
 
     try:
@@ -90,17 +90,22 @@ def load_alerts_to_postgres(results):
         return
     
     conn = psycopg2.connect(
-        dbname=os.getenv('database'),
-        user=os.getenv('user'),
-        password=os.getenv('password'),
-        host=os.getenv('host'),
-        port=os.getenv('port')
+        dbname=os.getenv('DB_NAME'),
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
     )
     cur = conn.cursor()
 
     insert_alerts_query = """
-        INSERT INTO bronze.openweather_alerts (mtn_id, latitude, longitude, pulled_at, alert)
-        VALUES %s
+        INSERT INTO bronze.openweather_alerts (
+            mtn_id, 
+            latitude, 
+            longitude, 
+            pulled_at, 
+            alert
+            ) VALUES %s
         ON CONFLICT DO NOTHING
     """
 

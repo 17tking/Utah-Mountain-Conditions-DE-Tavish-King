@@ -189,11 +189,11 @@ def load_wiki_mtns(clean_mtns):
     print("=" * 50)
 
     conn = psycopg2.connect(
-        dbname=os.getenv("database"),
-        user=os.getenv("user"),
-        password=os.getenv("password"),
-        host=os.getenv("host"),
-        port=os.getenv("port")
+        dbname=os.getenv('DB_NAME'),
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
     )
     cur = conn.cursor()
 

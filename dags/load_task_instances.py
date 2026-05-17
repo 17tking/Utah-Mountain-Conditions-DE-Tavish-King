@@ -11,9 +11,8 @@ import pendulum
 load_dotenv()
 
 local_tz = pendulum.timezone("America/Denver")
-
-
 ENDPOINT_URL = "http://airflow-apiserver:8080"
+
 
 # --- Airflow REST API ---
 def get_token():
@@ -30,9 +29,15 @@ def get_token():
 
 def fetch_task_instances(token):
     headers = {"Authorization": f"Bearer {token}"}
+
+
     resp = requests.get(
         f"{ENDPOINT_URL}/api/v2/dags/~/dagRuns/~/taskInstances",
-        headers=headers
+        headers=headers,
+        params={
+            "limit": 10000,
+            "order_by": "-start_date"
+        }
     )
     resp.raise_for_status()
 
@@ -42,20 +47,27 @@ def fetch_task_instances(token):
         "try_number", "operator_name"
     ]
 
+    task_instances = resp.json().get("task_instances", [])
+    
+    print(f"API returned {len(task_instances)} total task instances")
+    if task_instances:
+        print(f"Most recent: {task_instances[0].get('start_date')}")
+        print(f"Oldest: {task_instances[-1].get('start_date')}")
+    
     return [
         {k: ti[k] for k in fields}
-        for ti in resp.json()["task_instances"]
+        for ti in task_instances
     ]
 
 
 # --- Postgres ---
 def get_conn():
     return psycopg2.connect(
-        host=os.getenv("af_host"),
-        dbname=os.getenv("database"),
-        user=os.getenv("user"),
-        password=os.getenv("password"),
-        port=os.getenv("port")
+        host=os.getenv("DB_HOST"),
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USERNAME"),
+        password=os.getenv("DB_PASSWORD"),
+        port=os.getenv("DB_PORT")
     )
 
 

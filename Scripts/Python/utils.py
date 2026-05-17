@@ -10,11 +10,11 @@ load_dotenv()
 def _get_conn():
     """Internal helper to open a DB connection."""
     return psycopg2.connect(
-        dbname=os.getenv('database'),
-        user=os.getenv('user'),
-        password=os.getenv('password'),
-        host=os.getenv('host'),
-        port=os.getenv('port')
+        dbname=os.getenv('DB_NAME'),
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
     )
 
 
@@ -27,10 +27,12 @@ def get_summits():
     cur = conn.cursor()
 
     query = """
-        select mtn_id, latitude, longitude
-        from silver.wiki_mtns
-        where latitude is not null
-            and longitude is not null
+        SELECT mtn_id, 
+               latitude, 
+               longitude
+        FROM silver.wiki_mtns
+        WHERE latitude is not null
+        AND longitude is not null
     """
 
     cur.execute(query)

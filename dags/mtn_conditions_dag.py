@@ -13,7 +13,6 @@ import pendulum
 #   > 5-minute delay is to prevent calling API too hard
 # =================================================================================================
 
-local_tz = pendulum.timezone("America/Denver")
 etl_path = "/opt/airflow/scripts/Python"
 
 default_args = {
@@ -30,8 +29,8 @@ with DAG(
     dag_id="mtn_conditions_pipeline",
     default_args=default_args,
     description="ETL pipeline for Utah mountain weather conditions",
-    start_date=datetime(2025, 1, 1, tzinfo=local_tz),
-    schedule="0 1 * * *", #1am daily in cron format
+    start_date=datetime(2025, 1, 1),
+    schedule=pendulum.crontab("0 1 * * *", tz="America/Denver"), #1am daily in cron format
     catchup=False,
     tags=['weather', 'etl', 'mountains']
 ) as dag:
