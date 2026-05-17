@@ -60,6 +60,8 @@ This approach allows the pipeline to safely rerun without creating duplicates wh
 
 **Apache Airflow**: Workflow orchestration, scheduling, dependency management, monitoring.
 
+**Metabase**: Free dashboard tool to visualize, filter, and use my data pre-hike.
+
 **R**: Statistical analysis and visualizations.
 
 **Git/GitHub**: Version control and project documentation.
