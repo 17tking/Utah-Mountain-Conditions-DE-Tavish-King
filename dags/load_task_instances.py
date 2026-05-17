@@ -10,7 +10,6 @@ import pendulum
 
 load_dotenv()
 
-local_tz = pendulum.timezone("America/Denver")
 ENDPOINT_URL = "http://airflow-apiserver:8080"
 
 
@@ -109,8 +108,9 @@ def run_load_task_instances():
 # DAG for load_task_instances
 with DAG(
     dag_id="load_task_instances",
-    schedule="0 4 * * *",
-    start_date=datetime(2025, 1, 1, tzinfo=local_tz),
+    description="Loads task instance data from airflow API into META schema in utahmountains database.",
+    start_date=datetime(2025, 1, 1),
+    schedule=pendulum.cron("0 4 * * *", tz="America/Denver"),
     catchup=False,
     tags=["meta"],
 ) as dag:

@@ -11,7 +11,7 @@ Besides being able to explore more of my love for the mountains, I also designed
 ## How It Works?
 
 ### Data Architecture
-The database follows the **medallion architecture** (Bronze -> Silver -> Gold) style. Data is first stored raw, then transformed, and finally loaded into tables/views ready for analysis and visualizations.
+The database follows the **multi-layered architecture** isnpired by the medallion. Data is first stored raw, then transformed, and later loaded into tables/views ready for analysis and visualizations when the need arrives.
 
 ![DWH Layers](Docs/diagrams/DWH%20Layers.png)
 
@@ -19,7 +19,7 @@ The database follows the **medallion architecture** (Bronze -> Silver -> Gold) s
 ![Data Flow](Docs/diagrams/Data%20Flow%20-%20Utah%20Mountains.drawio.png)
 
 **Data Sources:**
-- **Wikipedia**: Top 50 Highest Summits/Mountains in Utah
+- **Wikipedia**: Top 50 Highest Summits/Mountains in Utah + more
 - **Weather Codes**: https://gist.github.com/stellasphere/9490c195ed2b53c707087c8c2db4ec0c
 - **OpenMeteo API**: Daily (7-day forecast), Hourly (24-hour forecast), and 15-minute Lightning Potential data
 - **OpenWeather API**: Live weather alerts
@@ -29,7 +29,6 @@ The complete data catalog can be found in these markdown files:
 
 - [Bronze Schema](Docs/diagrams/bronze_schema.md)
 - [Silver Schema](Docs/diagrams/silver_schema.md)
-- [Gold Schema](Docs/diagrams/gold_schema.md)
 
 ### Incremental Logic
 All bronze-to-silver transformations use incremental processing to efficiently handle new data while preventing duplicates. The pipeline compares the `pulled_at` timestamp from bronze against the maximum `pulled_at` in silver using a `>` filter, ensuring no records are missed when multiple pulls share the same timestamp.
@@ -40,7 +39,11 @@ This approach allows the pipeline to safely rerun without creating duplicates wh
 ### Apache Airflow Orchestration
 *Describe my DAG structure, scheduling intervals, task dependencies, monitoring/alerting setup*
 
-**`load_task_instances.py`** = Runs automatically at 2am every night. Fetches all task instances across all DAGs. Upserts them into meta.task_instances. 
+**`mtn_conditions_dag.py`** = Runs automatically at 1am every night. Python ETL & SQL load scripts are treated as tasks. 2 retries are attempted with 5-minute delay between each task to prevent hitting the API too hard.
+
+**`load_task_instances.py`** = Runs automatically at 4am every night. Fetches all task instances across all DAGs. Upserts them into `meta.task_instances`. 
+
+**`test_db_conn`** = Runs on manual trigger to test database connection. Runs a simple script to verify in Logs.
 
 
 ### Insights
@@ -68,8 +71,9 @@ This approach allows the pipeline to safely rerun without creating duplicates wh
 
 ```py
 Utah-Mountain-Conditions-DE/
-│
-├── weather_codes/                      # weather code json file
+|
+├── config/                     # hidden airflow.cfg file
+├── plugins/                    # airflow plugins
 |
 ├── dags/                       # DAG scripts used to schedule data ETL processes
 │
@@ -79,16 +83,20 @@ Utah-Mountain-Conditions-DE/
 │   ├── airflow+practice/       # airflow practice templates to refer to
 │   ├── notes/                  # Doc listing the data sources used with URLs 
 │   ├── .gitkeep                # 
+│   ├── wiki_mtns.csv           # File containing all mountains collecting data in the project
 │
 ├── Scripts/                    # Scripts for ETL/ELT processes and analyses
 │   ├── Python                  # Python scripts
 │   ├── SQL                     # SQL scripts
 │   ├── R                       # R scripts
 |
+├── weather_codes/              # weather code json file
+|
 ├── README.md                   # Project overview and details
 ├── .gitignore                  # Private info to be ignored by git
-└── requirements.txt            # Dependencies and requirements used for the project
-└── docker-compose.yaml         # Docker Compose file to define airflow container
+├── requirements.txt            # Dependencies and requirements used for the project
+├── docker-compose.yaml         # Docker Compose file to define airflow container 
+├── .env.example                # .env example with how I set up my hidden .env     
 ```
 
 ## Author
