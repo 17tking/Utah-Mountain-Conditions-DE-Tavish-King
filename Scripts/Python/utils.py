@@ -30,7 +30,7 @@ def get_summits():
         SELECT mtn_id, 
                latitude, 
                longitude
-        FROM silver.wiki_mtns
+        FROM bronze.wiki_mtns
         WHERE latitude is not null
         AND longitude is not null
     """

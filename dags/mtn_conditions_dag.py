@@ -30,7 +30,7 @@ with DAG(
     default_args=default_args,
     description="ETL pipeline for Utah mountain weather conditions",
     start_date=datetime(2025, 1, 1),
-    schedule=pendulum.crontab("0 1 * * *", tz="America/Denver"), #1am daily in cron format
+    schedule="0 7 * * *", #1am daily in MDT. 7am in UTC.
     catchup=False,
     tags=['weather', 'etl', 'mountains']
 ) as dag:

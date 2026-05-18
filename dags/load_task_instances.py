@@ -110,7 +110,7 @@ with DAG(
     dag_id="load_task_instances",
     description="Loads task instance data from airflow API into META schema in utahmountains database.",
     start_date=datetime(2025, 1, 1),
-    schedule=pendulum.cron("0 4 * * *", tz="America/Denver"),
+    schedule="0 9 * * *", #3am mdt
     catchup=False,
     tags=["meta"],
 ) as dag:
