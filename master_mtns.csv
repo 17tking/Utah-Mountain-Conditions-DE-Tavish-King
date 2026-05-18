@@ -50,3 +50,4 @@ mtn_id,mtn_name,mtn_range,elev_ft,elev_m,prom_ft,prom_m,isol_mi,isol_km,latitude
 049,South Yard Peak,Uinta Mountains,12503,3810.9,420,128,0.5,0.8,40.7455,-110.7214,America/Denver
 050,Mount Tukuhnikivatz,La Sal Mountains,12484,3805.0,756,230,1.5,2.41,38.4395,-109.2598,America/Denver
 051,Spanish Fork Peak,Wasatch Range,10196,3107,2972,906,8.83,14.21,40.0883,-111.5277,America/Denver
+052,Mount Timpanogos,Wasatch Range,11752,3582,5279,1609,39.6,63.8,40.3908,-111.6458,America/Denver

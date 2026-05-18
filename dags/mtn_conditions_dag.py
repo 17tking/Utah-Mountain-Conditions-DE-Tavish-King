@@ -37,6 +37,20 @@ with DAG(
     
 
     # EXTRACT & LOAD TO BRONZE
+
+    #loading master_mtns.csv to bronze
+    master_mtns_task = BashOperator(
+        task_id="load_master_mtns_bronze",
+        bash_command=f'python "{etl_path}/load_master_mtns.py"'
+    )
+
+    #loading bronze.wiki_mtns to silver
+    load_wiki_mtns_task = BashOperator(
+        task_id="load_wiki_mtns_silver",
+        bash_command='psql -h host.docker.internal -U tavishk17 -d utahmountains -f "/opt/airflow/scripts/SQL/Silver/load_wiki_mtns_silver.sql"',
+        env={'PGPASSWORD': '{{ var.value.password }}'}
+    )
+
     openmeteo_daily_task = BashOperator(
         task_id="om_daily_etl",
         bash_command=f'python "{etl_path}/extract_load_openmeteo_daily_forecast.py"'
@@ -87,7 +101,7 @@ with DAG(
     # ====================
 
     # Run Bronze tasks sequentially (prevent hitting the API too hard)
-    openmeteo_daily_task >> openmeteo_hourly_task >> openmeteo_lightning_task >> openweather_alerts_task
+    master_mtns_task >> load_wiki_mtns_task >> openmeteo_daily_task >> openmeteo_hourly_task >> openmeteo_lightning_task >> openweather_alerts_task
     
     # After all bronze loads complete, silver transforms run in parallel
     openweather_alerts_task >> [
