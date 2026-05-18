@@ -1,27 +1,23 @@
 import pandas as pd
-import psycopg2
-import psycopg2.extras as extras
-from psycopg2 import sql
 from bs4 import BeautifulSoup
 import requests
-import re
-import os
 import time
-from dotenv import load_dotenv
 
 # ============================================================
-# This script extracts, cleans, and loads the
-# "50 Tallest Mountain Peaks in Utah" table from Wikipedia
-# into the bronze.wiki_mtns PostgreSQL table.
+# This script extracts & cleans the "50 Tallest Mountain Peaks in Utah" 
+# table from Wikipedia and saves it to master_mtns.csv.
+# 
+# The CSV will then be loaded into 
+# `bronze.wiki_mtns` through a separate script/DAG.
 #
-# This is a one-time (or infrequent) load. The table is
-# truncated and reloaded each run to stay current with
-# any corrections to the source data.
+# WARNING: 
+#   This is a ONE-TIME extraction. Any future updates should be 
+#   made manually in master_mtns.csv.
 # ============================================================
 
 
 # ------------------
-# Step 1: Extract
+# Extract
 # ------------------
 def extract_wiki_mtns():
     wiki_url = "https://en.wikipedia.org/wiki/List_of_mountain_peaks_of_Utah"
@@ -56,13 +52,14 @@ def extract_wiki_mtns():
             data.append(cols)
 
     raw_mtns = pd.DataFrame(data, columns=col_headers)
+
     print(f"Extracted {len(raw_mtns)} rows from Wikipedia.")
+    print(f"Saved to master_mtns.csv")
+
     return raw_mtns
 
-    
-
 # ----------------
-# Step 2: Clean
+# Clean
 # ----------------
 def clean_wiki_mtns(raw_mtns):
     print("=" * 50)
@@ -178,66 +175,23 @@ def enrich_with_timezone(clean_mtns):
     else:
         print(f"Timezones fetched for all {len(clean_mtns)} summits.")
  
-    clean_mtns.to_csv('wiki_mtns.csv', index=False)
+
+    # Save data to CSV
+    clean_mtns.to_csv('master_mtns.csv', index=False)
+    print(f"Data cleaned!")
+
     return clean_mtns
 
 
-# ----------------
-# Step 3: Load
-# ----------------
-def load_wiki_mtns(clean_mtns):
-    print("=" * 50)
-    print(">> Loading mountain data into bronze.wiki_mtns...")
-    print("=" * 50)
-
-    conn = psycopg2.connect(
-        dbname=os.getenv('DB_NAME'),
-        user=os.getenv('DB_USERNAME'),
-        password=os.getenv('DB_PASSWORD'),
-        host=os.getenv('localhost'),
-        port=os.getenv('DB_PORT')
-    )
-    cur = conn.cursor()
-
-    try:
-        # Truncate first to avoid duplicates on re-runs
-        cur.execute("TRUNCATE TABLE bronze.wiki_mtns CASCADE;")
-
-        # Build INSERT using psycopg2.sql to avoid f-string SQL injection risk
-        columns = sql.SQL(", ").join(sql.Identifier(c) for c in clean_mtns.columns)
-        insert_query = sql.SQL(
-            "INSERT INTO bronze.wiki_mtns ({columns}) VALUES %s"
-        ).format(columns=columns)
-
-        rows = [tuple(row) for row in clean_mtns.itertuples(index=False, name=None)]
-        extras.execute_values(cur, insert_query, rows)
-        conn.commit()
-        print(f"Hallelujah! {len(clean_mtns)} rows inserted into bronze.wiki_mtns.")
-
-    except Exception as e:
-        conn.rollback()
-        print(f"Error loading data: {e}")
-        raise
-    finally:
-        cur.close()
-        conn.close()
-
-
-# -------
-# Main
-# -------
+# MAIN
 def main():
-    load_dotenv()
-
     raw_mtns = extract_wiki_mtns()
     clean_mtns = clean_wiki_mtns(raw_mtns)
     clean_mtns = enrich_with_timezone(clean_mtns)
-    load_wiki_mtns(clean_mtns)
 
     print("=" * 50)
     print(">> Done.")
     print("=" * 50)
-
 
 if __name__ == "__main__":
     main()
