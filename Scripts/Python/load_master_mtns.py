@@ -38,7 +38,7 @@ def load_wiki_mtns(master_mtns):
         dbname=os.getenv('DB_NAME'),
         user=os.getenv('DB_USERNAME'),
         password=os.getenv('DB_PASSWORD'),
-        host=os.getenv('localhost'),
+        host=os.getenv('DB_HOST'),
         port=os.getenv('DB_PORT')
     )
     cur = conn.cursor()
@@ -78,7 +78,7 @@ def main():
     print(">> Reading master_mtns.csv...")
     print("=" * 50)
 
-    master_mtns = pd.read_csv('master_mtns.csv')
+    master_mtns = pd.read_csv('/opt/airflow/master_mtns.csv') #FILE NOT FOUND ERROR!!!!!
     print(f"Loaded {len(master_mtns)} rows from CSV.")
 
     # load into database

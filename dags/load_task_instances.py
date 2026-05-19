@@ -1,12 +1,11 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from datetime import datetime, timezone
+from datetime import datetime
 
 import requests
 import os
 import psycopg2
 from dotenv import load_dotenv
-import pendulum
 
 load_dotenv()
 

@@ -2,7 +2,6 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from datetime import datetime, timedelta
 #from airflow.models import Variable
-import pendulum
 
 # ===============================================================================================
 # This DAG runs all ETL python scripts as tasks. 
