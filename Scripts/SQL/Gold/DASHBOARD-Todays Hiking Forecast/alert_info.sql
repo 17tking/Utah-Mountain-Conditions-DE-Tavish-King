@@ -6,8 +6,8 @@ select omd.mtn_id,
 	   omd.dly_time,
 	   alerts.alert_count,
 	   alerts.alert_events,
-	   alerts.alert_start,
-	   alerts.alert_end
+	   alerts.alert_start at time zone 'America/Denver' as alert_start,
+	   alerts.alert_end at time zone 'America/Denver' as alert_end
 from silver.openmeteo_daily omd
 left join silver.wiki_mtns on wiki_mtns.mtn_id = omd.mtn_id
 left join 

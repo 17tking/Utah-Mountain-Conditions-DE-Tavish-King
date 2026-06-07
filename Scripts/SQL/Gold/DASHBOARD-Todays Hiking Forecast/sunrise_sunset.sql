@@ -5,8 +5,8 @@ select omd.mtn_id,
 	   wiki_mtns.mtn_range,
 	   omd.pulled_at,
 	   omd.dly_time,
-	   omd.dly_sunrise::time,
-	   omd.dly_sunset::time
+	   (omd.dly_sunrise at time zone 'America/Denver')::time as dly_sunrise,
+	   (omd.dly_sunset at time zone 'America/Denver')::time as dly_sunset
 from silver.openmeteo_daily as omd
 left join silver.wiki_mtns on wiki_mtns.mtn_id = omd.mtn_id
 where dly_time = current_date
