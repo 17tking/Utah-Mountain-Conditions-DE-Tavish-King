@@ -51,3 +51,4 @@ mtn_id,mtn_name,mtn_range,elev_ft,elev_m,prom_ft,prom_m,isol_mi,isol_km,latitude
 050,Mount Tukuhnikivatz,La Sal Mountains,12484,3805.0,756,230,1.5,2.41,38.4395,-109.2598,America/Denver
 051,Spanish Fork Peak,Wasatch Range,10196,3107,2972,906,8.83,14.21,40.0883,-111.5277,America/Denver
 052,Mount Timpanogos,Wasatch Range,11752,3582,5279,1609,39.6,63.8,40.3908,-111.6458,America/Denver
+053,Mount Nebo,Wasatch Range,11933,3637,5488,1673,75.6,121.6,39.8216,-111.7599,America/Denver
