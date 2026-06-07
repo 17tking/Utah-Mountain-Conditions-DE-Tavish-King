@@ -47,7 +47,9 @@ This approach allows the pipeline to safely rerun without creating duplicates wh
 
 
 ### Insights
-*Describe some interesting insights from data analysis*
+
+![Wind Insights](Docs/images/wind_info_insights.jpg)
+*Metabase allows me to visualize wind info that I've collected and cleaned*
 
 
 ## Tools & Technologies
