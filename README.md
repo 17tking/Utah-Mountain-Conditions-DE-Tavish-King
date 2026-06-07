@@ -3,7 +3,7 @@
 
 
 ## Welcome!
-This project demonstrates an end-to-end analytical engineering pipeline that tracks weather conditions across Utah's 50 highest mountain peaks (eventually more). By pulling real-time forecasts from multiple APIs and transforming them into analytics-ready datasets, my project showcases skills in ETL development, database design, workflow orchestration, statistical analysis, and data visualization. 
+This project demonstrates an end-to-end analytical engineering pipeline that tracks weather conditions across Utah's 50 highest mountain peaks (and more). By pulling real-time forecasts from multiple APIs and transforming them into analytics-ready datasets, my project showcases skills in ETL development, database design, workflow orchestration, statistical analysis, and data visualization. 
 
 Besides being able to explore more of my love for the mountains, I also designed this portfolio project to increase my skills and develop best practices in analytical engineering and data analysis. Explore and enjoy! 
 
@@ -37,7 +37,6 @@ This approach allows the pipeline to safely rerun without creating duplicates wh
 
 
 ### Apache Airflow Orchestration
-*Describe my DAG structure, scheduling intervals, task dependencies, monitoring/alerting setup*
 
 **`mtn_conditions_dag.py`** = Runs automatically at 1am every night. Python ETL & SQL load scripts are treated as tasks. 2 retries are attempted with 5-minute delay between each task to prevent hitting the API too hard.
 
