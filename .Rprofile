@@ -8,6 +8,8 @@ suppressPackageStartupMessages({
   library(showtext)
   library(ggtext)
   library(dotenv)
+  library(tigris)
+  library(sf)
 })
 message("Project packages loaded :) You rock!")
 
@@ -92,7 +94,7 @@ ut_mtn_theme <- theme_set(
     legend.position = "none",
     
     plot.margin = margin(20,20,25,25),
-    text = element_markdown(
+    text = element_text(
       family = 'Hanken Grotesk',
       color = warm_black)
     )
