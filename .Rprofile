@@ -1,6 +1,7 @@
 # Packages
 suppressPackageStartupMessages({
   library(tidyverse)
+  library(lubridate)
   library(ggplot2)
   library(dbplyr)
   library(RPostgres)
@@ -35,7 +36,7 @@ misty_blue   <- "#e0f0f2"
 deep_slate   <- "#2e3a3f"
 stone_gray   <- "#5c6b6f"
 pine_green   <- "#00a86b"
-glacier_blue <- "#1e90dd"
+glacier_blue <- "dodgerblue3"
 earth_brown  <- "#997950"
 sunrise_gold <- "#daa520"
 
@@ -63,28 +64,29 @@ ut_mtn_theme <- theme_set(
     
     plot.subtitle = element_markdown(
       family = 'Mulish',
-      size = 5,
+      size = 4.5,
       hjust = 0,
-      margin = margin(5,0,30,0),
+      margin = margin(5,0,15,0),
       lineheight = 1.2),
     
     plot.caption = element_markdown(
       family = 'Mulish',
       size = 4,
       hjust = 1,
+      color = deep_slate,
       margin = margin(10,0,0,0),
       lineheight = 1.2),
     
     axis.title.y = element_markdown(
       family = 'Mulish',
-      size = 6,
+      size = 5,
       hjust = 0.5,
       margin = margin(0,15,0,0),
       lineheight = 1.2),
     
     axis.title.x = element_markdown(
       family = 'Mulish',
-      size = 6,
+      size = 5,
       hjust = 0.5,
       margin = margin(15,0,0,0),
       lineheight = 1.2),
