@@ -93,12 +93,12 @@ def run_load_task_instances():
             %(start_date)s, %(end_date)s, %(duration)s,
             %(retry_attempts)s, %(operator_name)s
         )
-        ON CONFLICT (task_instance_id, dag_id, dag_run_id, task_id)
+        ON CONFLICT (dag_id, dag_run_id, task_id)
         DO UPDATE SET
-            state         = EXCLUDED.state,
-            end_date      = EXCLUDED.end_date,
-            duration      = EXCLUDED.duration,
-            retry_attempts    = EXCLUDED.retry_attempts;
+            state          = EXCLUDED.state,
+            end_date       = EXCLUDED.end_date,
+            duration       = EXCLUDED.duration,
+            retry_attempts = EXCLUDED.retry_attempts;
     """
 
     token = get_token()
