@@ -2,6 +2,8 @@ import psycopg2
 import os
 import time
 import requests
+import secrets 
+import string
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -84,7 +86,8 @@ def call_api_with_retry(url, params, retries=3, backoff=60):
 # -----------------------------------------
 # API call logger
 # -----------------------------------------
-# Logs each API call to meta.api_call_log.
+# Logs each API call to meta.api_call_log. call_id being SERIAL allows me to see how many calls I make 
+# on a given day to ensure I'm not going over my api call limit.
 #
 # Usage — wrap your requests.get() like this:
 #
@@ -94,11 +97,11 @@ def call_api_with_retry(url, params, retries=3, backoff=60):
 #   start = time.time()
 #   r = requests.get(url, params=params, timeout=10)
 #   log_api_call(
-#       api_source='openmeteo',
+#       source='openmeteo',
 #       endpoint=url,
-#       mtn_id=s['mtn_id'],
+#       mountain_id=s['mtn_id'],
 #       status_code=r.status_code,
-#       response_ms=round((time.time() - start) * 1000),
+#       response_time=round((time.time() - start) * 1000),
 #       success=r.status_code == 200
 #   )
 #
@@ -106,11 +109,11 @@ def call_api_with_retry(url, params, retries=3, backoff=60):
 #   status_code=None, success=False, error_message=str(e)
 # -----------------------------------------
 def log_api_call(
-    api_source,
+    source,
     endpoint,
-    mtn_id=None,
+    mountain_id=None,
     status_code=None,
-    response_ms=None,
+    response_time=None,
     success=True,
     error_message=None
 ):
@@ -119,18 +122,24 @@ def log_api_call(
         cur = conn.cursor()
         cur.execute("""
             INSERT INTO meta.api_call_log (
-                api_source,
+                source,
                 endpoint,
-                mtn_id,
+                mountain_id,
                 status_code,
-                response_ms,
+                response_time,
                 success,
                 error_message
             ) VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """, (api_source, endpoint, mtn_id, status_code, response_ms, success, error_message))
+        """, (source, endpoint, mountain_id, status_code, response_time, success, error_message))
         conn.commit()
         cur.close()
         conn.close()
     except Exception as e:
         # Logging should never crash the pipeline — fail silently here
         print(f"Warning: api_call_log insert failed: {e}")
+
+
+# --- Generate a Unique Alphanumeric ID. ---
+def generate_id(length=24):
+    characters = string.ascii_letters + string.digits
+    return ''.join(secrets.choice(characters) for _ in range(length))
