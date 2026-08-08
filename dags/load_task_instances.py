@@ -5,6 +5,7 @@ from datetime import datetime
 import requests
 import os
 import psycopg2
+from dagutils import generate_id
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -53,7 +54,18 @@ def fetch_task_instances(token):
         print(f"Oldest: {task_instances[-1].get('start_date')}")
     
     return [
-        {k: ti[k] for k in fields}
+        {
+            "task_instance_id": generate_id(),
+            "task_id": ti["task_id"],
+            "dag_id": ti["dag_id"],
+            "dag_run_id": ti["dag_run_id"],
+            "state": ti["state"],
+            "start_date": ti["start_date"],
+            "end_date": ti["end_date"],
+            "duration": ti["duration"],
+            "retry_attempts": ti["try_number"],
+            "operator_name": ti["operator_name"]
+        }
         for ti in task_instances
     ]
 
@@ -72,21 +84,21 @@ def get_conn():
 def run_load_task_instances():
     sql = """
         INSERT INTO meta.task_instances (
-            task_id, dag_id, dag_run_id, state,
+            task_instance_id, task_id, dag_id, dag_run_id, state,
             start_date, end_date, duration,
-            try_number, operator_name
+            retry_attempts, operator_name
         )
         VALUES (
-            %(task_id)s, %(dag_id)s, %(dag_run_id)s, %(state)s,
+            %(task_instance_id)s, %(task_id)s, %(dag_id)s, %(dag_run_id)s, %(state)s,
             %(start_date)s, %(end_date)s, %(duration)s,
-            %(try_number)s, %(operator_name)s
+            %(retry_attempts)s, %(operator_name)s
         )
-        ON CONFLICT (dag_id, dag_run_id, task_id)
+        ON CONFLICT (task_instance_id, dag_id, dag_run_id, task_id)
         DO UPDATE SET
             state         = EXCLUDED.state,
             end_date      = EXCLUDED.end_date,
             duration      = EXCLUDED.duration,
-            try_number    = EXCLUDED.try_number;
+            retry_attempts    = EXCLUDED.retry_attempts;
     """
 
     token = get_token()

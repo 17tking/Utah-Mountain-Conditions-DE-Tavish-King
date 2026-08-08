@@ -83,11 +83,11 @@ def main():
         time.sleep(5)
  
         log_api_call(
-            api_source='openmeteo',
+            source='openmeteo',
             endpoint=meteo_url,
-            mtn_id=s['mtn_id'],
+            mountain_id=s['mtn_id'],
             status_code=r.status_code,
-            response_ms=elapsed_ms,
+            response_time=elapsed_ms,
             success=r.status_code == 200
         )
         
