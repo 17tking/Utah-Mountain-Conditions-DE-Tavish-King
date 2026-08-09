@@ -62,8 +62,8 @@ def main():
         # Deep copy base params so each summit has its own lat/lon
         # and the shared "hourly" list is not mutated
         params = copy.deepcopy(base_params)
-        params["latitude"] = s["latitude"]
-        params["longitude"] = s["longitude"]
+        params["latitude"] = s["mountain_latitude"]
+        params["longitude"] = s["mountain_longitude"]
  
         # Make request to Open-Meteo API
         start = time.time()
@@ -74,16 +74,16 @@ def main():
         log_api_call(
             source='openmeteo',
             endpoint=meteo_url,
-            mountain_id=s['mtn_id'],
+            mountain_id=s['mountain_id'],
             status_code=r.status_code,
             response_time=elapsed_ms,
             success=r.status_code == 200
         )
 
         if r is None or r.status_code != 200:
-            print(f"Failed for summit mtn_id={s['mtn_id']} — status {r.status_code}")
+            print(f"Failed for summit mountain_id={s['mountain_id']} — status {r.status_code}")
             print(f"Response: {r.text}")
-            failed_summits.append(s["mtn_id"])
+            failed_summits.append(s["mountain_id"])
             continue
  
         # Parse JSON response
@@ -103,7 +103,7 @@ def main():
         # Append as tuple for batch insert
         # Note: raw_json must be serialized to JSON string for PostgreSQL JSONB column
         rows.append((
-            s["mtn_id"],
+            s["mountain_id"],
             latitude,
             longitude,
             measured_at_m,

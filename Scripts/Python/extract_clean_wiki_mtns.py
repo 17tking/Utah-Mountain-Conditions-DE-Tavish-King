@@ -5,14 +5,14 @@ import time
 
 # ============================================================
 # This script extracts & cleans the "50 Tallest Mountain Peaks in Utah" 
-# table from Wikipedia and saves it to master_mtns.csv.
+# table from Wikipedia and saves it to master_mountains.csv.
 # 
 # The CSV will then be loaded into 
-# `bronze.wiki_mtns` through a separate script/DAG.
+# `bronze.mountains_stg` through a separate script/DAG.
 #
 # WARNING: 
-#   This is a ONE-TIME extraction. Any future updates should be 
-#   made manually in master_mtns.csv.
+#   This is a **ONE-TIME** extraction ran at start of configuration. Any future updates should be 
+#   made manually in master_mountains.csv.
 # ============================================================
 
 
@@ -54,7 +54,7 @@ def extract_wiki_mtns():
     raw_mtns = pd.DataFrame(data, columns=col_headers)
 
     print(f"Extracted {len(raw_mtns)} rows from Wikipedia.")
-    print(f"Saved to master_mtns.csv")
+    print(f"Saved to master_mountains.csv")
 
     return raw_mtns
 
@@ -69,59 +69,59 @@ def clean_wiki_mtns(raw_mtns):
     df = raw_mtns.copy()
 
     # Unique mountain ID (zero-padded)
-    df["mtn_id"] = (df.index + 1).map(lambda x: f"{x:03}")
-    cols = ["mtn_id"] + [c for c in df.columns if c != "mtn_id"]
+    df["mountain_id"] = (df.index + 1).map(lambda x: f"{x:03}")
+    cols = ["mountain_id"] + [c for c in df.columns if c != "mountain_id"]
     df = df[cols]
 
     # Standardize column names
     df = df.rename(columns={
         "Rank": "rank",
-        "Mountain peak": "mtn_name",
-        "Mountain range": "mtn_range"
+        "Mountain peak": "mountain_name",
+        "Mountain range": "mountain_range"
     })
 
     # Remove Wikipedia citation brackets e.g. [1], [note 2]
-    df["mtn_name"] = df["mtn_name"].str.replace(r"\[[^\]]*\]", "", regex=True).str.strip()
+    df["mountain_name"] = df["mountain_name"].str.replace(r"\[[^\]]*\]", "", regex=True).str.strip()
 
     # Split elevation into ft and m
     # Format in source: "13,528 ft(4,123 m)" — strip commas, parens, unit labels
-    df["elev_ft"] = (
+    df["elevation_ft"] = (
         df["Elevation"].str.split("ft").str[0]
         .str.replace(",", "").str.strip()
     )
-    df["elev_m"] = (
+    df["elevation_m"] = (
         df["Elevation"].str.split("ft").str[1]
         .str.replace(r"[^\d.]", "", regex=True).str.strip()
     )
 
     # Split prominence into ft and m
-    df["prom_ft"] = (
+    df["prominence_ft"] = (
         df["Prominence"].str.split("ft").str[0]
         .str.replace(",", "").str.strip()
     )
-    df["prom_m"] = (
+    df["prominence_m"] = (
         df["Prominence"].str.split("ft").str[1]
         .str.replace(r"[^\d.]", "", regex=True).str.strip()
     )
 
     # Split isolation into mi and km
-    df["isol_mi"] = (
+    df["isolation_mi"] = (
         df["Isolation"].str.split("mi").str[0]
         .str.replace(",", "").str.strip()
     )
-    df["isol_km"] = (
+    df["isolation_km"] = (
         df["Isolation"].str.split("mi").str[1]
         .str.replace(r"[^\d.]", "", regex=True).str.strip()
     )
 
     # Convert numeric columns
-    num_cols = ["elev_ft", "elev_m", "prom_ft", "prom_m", "isol_mi", "isol_km"]
+    num_cols = ["elevation_ft", "elevation_m", "prominence_ft", "prominence_m", "isolation_mi", "isolation_km"]
     df[num_cols] = df[num_cols].apply(pd.to_numeric, errors="coerce")
 
     # Parse coordinates — source format: "37.7749°N 113.2994°W"
     coords = df["Location"].str.extract(r"(?P<lat>\d+\.\d+)°?N.*?(?P<lon>\d+\.\d+)°?W")
-    df["latitude"] = coords["lat"].astype(float)
-    df["longitude"] = -coords["lon"].astype(float)
+    df["mountain_latitude"] = coords["lat"].astype(float)
+    df["mountain_longitude"] = -coords["lon"].astype(float)
 
     # Drop raw source columns
     clean_mtns = df.drop(["rank", "Elevation", "Prominence", "Isolation", "Location"], axis=1)
@@ -149,8 +149,8 @@ def enrich_with_timezone(clean_mtns):
  
     for _, row in clean_mtns.iterrows():
         params = {
-            "latitude": row["latitude"],
-            "longitude": row["longitude"],
+            "latitude": row["mountain_latitude"],
+            "longitude": row["mountain_longitude"],
             "timezone": "auto",
             "forecast_days": 1,
             "daily": "weather_code"  # minimal field — we only need the timezone metadata
@@ -163,12 +163,12 @@ def enrich_with_timezone(clean_mtns):
             timezones.append(tz)
             time.sleep(0.3)
         except Exception as e:
-            print(f"Timezone fetch failed for mtn_id={row['mtn_id']} ({row['mtn_name']}): {e}")
+            print(f"Timezone fetch failed for mountain_id={row['mountain_id']} ({row['mountain_name']}): {e}")
             # timezones.append(None)
-            failed.append(row["mtn_id"])
+            failed.append(row["mountain_id"])
  
     clean_mtns = clean_mtns.copy()
-    clean_mtns["timezone"] = timezones
+    clean_mtns["mountain_timezone"] = timezones
  
     if failed:
         print(f"Warning: timezone fetch failed for {len(failed)} summit(s): {failed}")
@@ -177,7 +177,7 @@ def enrich_with_timezone(clean_mtns):
  
 
     # Save data to CSV
-    clean_mtns.to_csv('master_mtns.csv', index=False)
+    clean_mtns.to_csv('master_mountains.csv', index=False)
     print(f"Data cleaned!")
 
     return clean_mtns

@@ -12,7 +12,7 @@ Script Purpose:
 Note: 
 	After running this script, you will need to run the
 	python scripts that populate the data.
-	Ensure that wiki_mtns and weathercodes are populated first before loading!!
+	Ensure that `mountains_stg` and `weathercodes` are populated first before loading!!
 
 Warning: 
 	Running this script will erase data and tables. Ensure
@@ -24,22 +24,22 @@ Warning:
 -- -------------------------
 -- bronze.wiki_mtns
 -- -------------------------
-drop table if exists bronze.wiki_mtns cascade;
+drop table if exists bronze.mountains_stg cascade;
 
-create table bronze.wiki_mtns (
-    mtn_id          INT             PRIMARY KEY,
-    mtn_name        VARCHAR(100),
-    mtn_range       VARCHAR(100),
-    elev_ft         INT,
-    elev_m          INT,
-    prom_ft         INT,
-    prom_m          INT,
-    isol_mi         DECIMAL(6,2),
-    isol_km         DECIMAL(6,2),
-    latitude        DECIMAL(9,6),
-    longitude       DECIMAL(9,6),
-	timezone        VARCHAR(50),
-    load_timestamp  TIMESTAMP       DEFAULT CURRENT_TIMESTAMP
+create table bronze.mountains_stg (
+    mountain_id         INT            PRIMARY KEY,
+    mountain_name       VARCHAR(100),
+    mountain_range      VARCHAR(100),
+    elevation_ft        INT,
+    elevation_m         INT,
+    prominence_ft       INT,
+    prominence_m        INT,
+    isolation_mi        DECIMAL(6,2),
+    isolation_km        DECIMAL(6,2),
+    mountain_latitude   DECIMAL(9,6),
+    mountain_longitude  DECIMAL(9,6),
+	mountain_timezone   VARCHAR(50),
+    create_date         TIMESTAMP       DEFAULT CURRENT_TIMESTAMP
 );
 
 

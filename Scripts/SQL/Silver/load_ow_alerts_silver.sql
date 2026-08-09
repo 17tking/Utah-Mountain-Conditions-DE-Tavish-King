@@ -10,7 +10,7 @@ Notes:
 	Unix timestamps are cast to timestamptz explicitly in UTC to avoid timezone
 	drift if the Postgres server timezone is ever changed.
 
-	latitude and longitude are mountain-level attributes stored in silver.wiki_mtns
+	latitude and longitude are mountain-level attributes stored in silver.mountains
 	and are not repeated here (3NF).
 
 */
