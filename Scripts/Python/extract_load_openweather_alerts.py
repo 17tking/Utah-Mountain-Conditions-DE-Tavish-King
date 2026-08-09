@@ -10,7 +10,7 @@ from utils import get_summits
 
 # ===============================================================
 # This script extracts daily weather alerts for all summits listed
-# in the wiki_mtns table using the OpenWeather One Call 3.0 API.
+# in the mountains_stg table using the OpenWeather One Call 3.0 API.
 #
 # It stores the raw alert data in the bronze.alerts PostgreSQL table
 # as JSONB, ensuring no duplicates via a unique index on (mtn_id,
@@ -55,20 +55,20 @@ def extract_all_summits():
     summits = get_summits()
 
     for s in summits:
-        alerts = fetch_alerts(s["latitude"], s["longitude"])
+        alerts = fetch_alerts(s["mountain_latitude"], s["mountain_longitude"])
 
         # fetch_alerts returns [] on error, so track which summits came back empty
         # due to API failure vs. genuinely having no alerts
         if alerts is None:
-            failed_summits.append(s["mtn_id"])
+            failed_summits.append(s["mountain_id"])
             continue
         pulled_at = datetime.now(timezone.utc).isoformat()
 
         for a in alerts:
             results.append({
-                "mtn_id": s["mtn_id"],
-                "latitude": float(s["latitude"]),
-                "longitude": float(s["longitude"]),
+                "mtn_id": s["mountain_id"],
+                "latitude": s["mountain_latitude"],
+                "longitude": s["mountain_longitude"],
                 "pulled_at": pulled_at,
                 "alert": a
             })

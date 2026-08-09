@@ -9,7 +9,7 @@ Notes:
 	NULL lightning potential values are preserved as NULL rather than coalesced
 	to 0 — null means no data, 0 means confirmed no lightning potential.
 	latitude, longitude, elevation_m, and timezone are mountain-level attributes
-	stored in silver.wiki_mtns and are not repeated here (3NF).
+	stored in silver.mountains and are not repeated here (3NF).
 */
 
 insert into silver.openmeteo_lightning (mtn_id, measured_at_m, pulled_at, ltng_time, ltng_potential_j_kg_max, ltng_potential_j_kg_mean)

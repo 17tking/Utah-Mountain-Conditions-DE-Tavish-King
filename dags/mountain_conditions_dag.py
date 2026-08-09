@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 # Extracts weather data from OpenMeteo & OpenWeather APIs, transforms to silver layer
 # Schedule: Daily @ 1am MDT
 # Retries: 2 attempts with 5-minute delay
-#   > note: scripts already contain 3 retries with delays between each mtn_id call
+#   > note: scripts already contain 3 retries with delays between each mountain_id call
 #   > 5-minute delay is to prevent calling API too hard
 # =================================================================================================
 
@@ -25,7 +25,7 @@ default_args = {
 
 
 with DAG(
-    dag_id="mtn_conditions_pipeline",
+    dag_id="mountain_conditions_pipeline",
     default_args=default_args,
     description="ETL pipeline for Utah mountain weather conditions",
     start_date=datetime(2025, 1, 1),
@@ -37,16 +37,16 @@ with DAG(
 
     # EXTRACT & LOAD TO BRONZE
 
-    #loading master_mtns.csv to bronze
-    master_mtns_task = BashOperator(
-        task_id="load_master_mtns_bronze",
-        bash_command=f'python "{etl_path}/load_master_mtns.py"'
+    #loading master_mountains.csv to bronze
+    master_mountains_task = BashOperator(
+        task_id="load_master_mountains_bronze",
+        bash_command=f'python "{etl_path}/load_master_mountains.py"'
     )
 
-    #loading bronze.wiki_mtns to silver
-    load_wiki_mtns_task = BashOperator(
-        task_id="load_wiki_mtns_silver",
-        bash_command='psql -h host.docker.internal -U tavishk17 -d utahmountains -f "/opt/airflow/scripts/SQL/Silver/load_wiki_mtns_silver.sql"',
+    #loading bronze.mountains_stg to silver
+    load_mountains_task = BashOperator(
+        task_id="load_mountains_silver",
+        bash_command='psql -h host.docker.internal -U tavishk17 -d utahmountains -f "/opt/airflow/scripts/SQL/Silver/load_mountains_silver.sql"',
         env={'PGPASSWORD': '{{ var.value.password }}'}
     )
 
@@ -100,7 +100,7 @@ with DAG(
     # ====================
 
     # Run Bronze tasks sequentially (prevent hitting the API too hard)
-    master_mtns_task >> load_wiki_mtns_task >> openmeteo_daily_task >> openmeteo_hourly_task >> openmeteo_lightning_task >> openweather_alerts_task
+    master_mountains_task >> load_mountains_task >> openmeteo_daily_task >> openmeteo_hourly_task >> openmeteo_lightning_task >> openweather_alerts_task
     
     # After all bronze loads complete, silver transforms run in parallel
     openweather_alerts_task >> [

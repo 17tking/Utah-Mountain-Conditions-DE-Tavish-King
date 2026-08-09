@@ -1,4 +1,4 @@
-mtn_id,mtn_name,mtn_range,elev_ft,elev_m,prom_ft,prom_m,isol_mi,isol_km,latitude,longitude,timezone
+mountain_id,mountain_name,mountain_range,elevation_ft,elevation_m,prominence_ft,prominence_m,isolation_mi,isolation_km,mountain_latitude,mountain_longitude,mountain_timezone
 001,Kings Peak,Uinta Mountains,13529,4123.6,6349,1935,166.6,268.0,40.7764,-110.373,America/Denver
 002,South Kings Peak,Uinta Mountains,13517,4119.9,352,107,0.8,1.29,40.7659,-110.3779,America/Denver
 003,Gilbert Peak,Uinta Mountains,13447,4098.6,1559,475,3.6,5.79,40.8235,-110.34,America/Denver

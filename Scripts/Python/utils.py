@@ -29,12 +29,12 @@ def get_summits():
     cur = conn.cursor()
 
     query = """
-        SELECT mtn_id, 
-               latitude, 
-               longitude
-        FROM bronze.wiki_mtns
-        WHERE latitude is not null
-        AND longitude is not null
+        SELECT mountain_id, 
+               mountain_latitude, 
+               mountain_longitude
+        FROM bronze.mountains_stg
+        WHERE mountain_latitude is not null
+        AND mountain_longitude is not null
     """
 
     cur.execute(query)
@@ -44,7 +44,7 @@ def get_summits():
     conn.close()
 
     return [
-        {"mtn_id": r[0], "latitude": float(r[1]), "longitude": float(r[2])}
+        {"mountain_id": r[0], "mountain_latitude": float(r[1]), "mountain_longitude": float(r[2])}
         for r in rows
     ]
 
@@ -99,7 +99,7 @@ def call_api_with_retry(url, params, retries=3, backoff=60):
 #   log_api_call(
 #       source='openmeteo',
 #       endpoint=url,
-#       mountain_id=s['mtn_id'],
+#       mountain_id=s['mountain_id'],
 #       status_code=r.status_code,
 #       response_time=round((time.time() - start) * 1000),
 #       success=r.status_code == 200

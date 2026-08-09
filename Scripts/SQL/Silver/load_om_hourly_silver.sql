@@ -10,7 +10,7 @@ Notes:
 	new hours are appended to preserve forecast history.
 
 	latitude, longitude, elevation_m, and timezone are mountain-level attributes
-	stored in silver.wiki_mtns and are not repeated here (3NF).
+	stored in silver.mountains and are not repeated here (3NF).
 
 */
 

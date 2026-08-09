@@ -13,32 +13,32 @@ Notes:
 	- Tables are designed for incremental loading with upserts
 	- JSON fields from Bronze are transformed into relational columns
 	- No business logic or aggregation is applied
-	- latitude, longitude, elevation_m, and timezone are mountain-level
-	  attributes and live only in silver.wiki_mtns — they are not
+	- mountain_latitude, mountain_longitude, elevation_m, and mountain_timezone are mountain-level
+	  attributes and live only in silver.mountains — they are not
 	  repeated in fact tables (3NF)
 =============================================================
 */
 
 
 -- -------------------------
--- silver.wiki_mtns
+-- silver.mountains
 -- -------------------------
--- Renamed mtn_id_pk to mtn_id for cleaner FK references across all tables
-drop table if exists silver.wiki_mtns cascade;
+drop table if exists silver.mountains cascade;
 
-create table silver.wiki_mtns (
-    mtn_id      INT             PRIMARY KEY,
-    mtn_name    VARCHAR(100),
-    mtn_range   VARCHAR(100),
-    elev_ft     INT             CHECK (elev_ft > 0),
-    elev_m      INT             CHECK (elev_m > 0),
-    prom_ft     INT,
-    prom_m      INT,
-    isol_mi     DECIMAL(6,2),
-    isol_km     DECIMAL(6,2),
-    latitude    DECIMAL(9,6)    NOT NULL CHECK (latitude BETWEEN -90 AND 90),
-    longitude   DECIMAL(9,6)    NOT NULL CHECK (longitude BETWEEN -180 AND 180),
-    timezone    VARCHAR(50)
+create table silver.mountains (
+    mountain_id          INT             PRIMARY KEY,
+    mountain_name        VARCHAR(100),
+    mountain_range       VARCHAR(100),
+    elevation_ft         INT             CHECK (elevation_ft > 0),
+    elevation_m          INT             CHECK (elevation_m > 0),
+    prominence_ft        INT,
+    prominence_m         INT,
+    isolation_mi         DECIMAL(6,2),
+    isolation_km         DECIMAL(6,2),
+    mountain_latitude    DECIMAL(9,6)    NOT NULL CHECK (mountain_latitude BETWEEN -90 AND 90),
+    mountain_longitude   DECIMAL(9,6)    NOT NULL CHECK (mountain_longitude BETWEEN -180 AND 180),
+    mountain_timezone    VARCHAR(50)
+    create_date          TIMESTAMP       DEFAULT CURRENT_TIMESTAMP
 );
 
 
