@@ -44,25 +44,26 @@ create table bronze.mountains_stg (
 
 
 -- -------------------------
--- bronze.openweather_alerts
+-- bronze.alerts_stg
 -- -------------------------
-drop table if exists bronze.openweather_alerts cascade;
+drop table if exists bronze.alerts_stg cascade;
 
-create table bronze.openweather_alerts (
-    mtn_id      INT             REFERENCES bronze.wiki_mtns(mtn_id),
-    latitude    FLOAT           NOT NULL,
-    longitude   FLOAT           NOT NULL,
-    pulled_at   TIMESTAMPTZ     NOT NULL,
-    alert       JSONB           NOT NULL
+create table bronze.alerts_stg (
+    alert_id         VARCHAR(24)   PRIMARY KEY,
+    mountain_id      INT           REFERENCES bronze.mountains(mountain_id),
+    alert_latitude   FLOAT         NOT NULL,
+    alert_longitude  FLOAT         NOT NULL,
+    create_date      TIMESTAMP     NOT NULL,
+    alert_json       JSONB         NOT NULL
 );
 
 -- Unique index to prevent duplicate alerts
 create unique index if not exists bronze_alerts_unique_idx
-on bronze.openweather_alerts (
-    mtn_id,
-    (alert->>'event'),
-    (alert->>'start'),
-    (alert->>'end')
+on bronze.alerts_stg (
+    mountain_id,
+    (alert_json->>'event'),
+    (alert_json->>'start'),
+    (alert_json->>'end')
 );
 
 

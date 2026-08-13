@@ -58,18 +58,18 @@ create table silver.weathercodes (
 -- ----------------------------
 -- silver.openweather_alerts
 -- ----------------------------
-drop table if exists silver.openweather_alerts cascade;
+drop table if exists silver.alerts cascade;
 
-create table silver.openweather_alerts (
-    mtn_id              INT             NOT NULL REFERENCES silver.wiki_mtns(mtn_id),
-	alert_pulled_at     TIMESTAMPTZ,
-    alert_sender_name   TEXT,
-    alert_event         TEXT            NOT NULL,
-    alert_start         TIMESTAMPTZ     NOT NULL,
-    alert_end           TIMESTAMPTZ     NOT NULL CHECK (alert_end >= alert_start),
-    alert_description   TEXT            CHECK (length(alert_description) <= 5000),
-    alert_tags          JSONB,
-    PRIMARY KEY (mtn_id, alert_event, alert_start)
+create table silver.alerts (
+    alert_id         VARCHAR(24)     PRIMARY KEY,
+    mountain_id      INT             NOT NULL REFERENCES silver.mountains(mountain_id),
+	create_date      TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
+    sender_name      VARCHAR(100),
+    event_name       VARCHAR(100)    NOT NULL,
+    start_time       TIMESTAMPTZ     NOT NULL,
+    end_time         TIMESTAMPTZ     NOT NULL CHECK (end_time >= start_time),
+    description      TEXT            CHECK (length(description) <= 5000),
+    alert_tags       JSONB
 );
 
 

@@ -2,22 +2,24 @@ import requests
 import psycopg2
 from psycopg2.extras import execute_values
 import json
-from datetime import timezone, datetime
 import time
 import os
 from dotenv import load_dotenv
-from utils import get_summits
+from utils import get_summits, generate_id
 
 # ===============================================================
 # This script extracts daily weather alerts for all summits listed
 # in the mountains_stg table using the OpenWeather One Call 3.0 API.
 #
-# It stores the raw alert data in the bronze.alerts PostgreSQL table
-# as JSONB, ensuring no duplicates via a unique index on (mtn_id,
+# It stores the raw alert data in the bronze.alerts_stg PostgreSQL table
+# as JSONB, ensuring no duplicates via a unique index on (mountain_id,
 # event, start, end). 
 # 
 # The script also handles incremental loading (1x daily) and
 # timestamps each pull for tracking purposes.
+#
+# NEW: create_date removed because SQL DDL stores it as current_timestamp.
+# Meaning, its not required to be in here and will populate when loaded.
 # ===============================================================
 
 load_dotenv()
@@ -62,15 +64,14 @@ def extract_all_summits():
         if alerts is None:
             failed_summits.append(s["mountain_id"])
             continue
-        pulled_at = datetime.now(timezone.utc).isoformat()
 
         for a in alerts:
             results.append({
-                "mtn_id": s["mountain_id"],
-                "latitude": s["mountain_latitude"],
-                "longitude": s["mountain_longitude"],
-                "pulled_at": pulled_at,
-                "alert": a
+                "alert_id": generate_id(),
+                "mountain_id": s["mountain_id"],
+                "alert_latitude": s["mountain_latitude"],
+                "alert_longitude": s["mountain_longitude"],
+                "alert_json": a
             })
 
         time.sleep(0.5)
@@ -99,12 +100,12 @@ def load_alerts_to_postgres(results):
     cur = conn.cursor()
 
     insert_alerts_query = """
-        INSERT INTO bronze.openweather_alerts (
-            mtn_id, 
-            latitude, 
-            longitude, 
-            pulled_at, 
-            alert
+        INSERT INTO bronze.alerts_stg (
+            alert_id,
+            mountain_id, 
+            alert_latitude, 
+            alert_longitude, 
+            alert_json
             ) VALUES %s
         ON CONFLICT DO NOTHING
     """
@@ -112,11 +113,11 @@ def load_alerts_to_postgres(results):
     # Preparing data for execute values
     values = [
         (
-            r["mtn_id"],
-            r["latitude"],
-            r["longitude"],
-            r["pulled_at"],
-            json.dumps(r["alert"])
+            r["alert_id"],
+            r["mountain_id"],
+            r["alert_latitude"],
+            r["alert_longitude"],
+            json.dumps(r["alert_json"])
         )
         for r in results
     ]
