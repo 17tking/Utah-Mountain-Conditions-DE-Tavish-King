@@ -16,7 +16,7 @@ def get_conn():
     )
 
 
-def populate_task_instance_ids():
+def populate_ids():
     conn = get_conn()
 
     try:
@@ -24,36 +24,38 @@ def populate_task_instance_ids():
 
             # Get all existing rows that don't have an ID
             cur.execute("""
-                SELECT dag_id, dag_run_id, task_id
-                FROM meta.task_instances
-                WHERE task_instance_id IS NULL;
+                SELECT mountain_id, alert_event, alert_start, alert_end
+                FROM silver.alerts
+                WHERE alert_id IS NULL;
             """)
 
             rows = cur.fetchall()
 
-            print(f"Found {len(rows)} rows missing task_instance_id")
+            print(f"Found {len(rows)} rows missing alert_id")
 
-            for dag_id, dag_run_id, task_id in rows:
+            for mountain_id, alert_event, alert_start, alert_end in rows:
 
                 new_id = generate_id()
 
                 cur.execute("""
-                    UPDATE meta.task_instances
-                    SET task_instance_id = %s
-                    WHERE dag_id = %s
-                      AND dag_run_id = %s
-                      AND task_id = %s
-                      AND task_instance_id IS NULL;
+                    UPDATE silver.alerts
+                    SET alert_id = %s
+                    WHERE mountain_id = %s
+                      AND alert_event = %s
+                      AND alert_start = %s
+                      AND alert_end = %s
+                      AND alert_id IS NULL;
                 """, (
                     new_id,
-                    dag_id,
-                    dag_run_id,
-                    task_id
+                    mountain_id,
+                    alert_event,
+                    alert_start,
+                    alert_end
                 ))
 
         conn.commit()
 
-        print(f"Successfully populated {len(rows)} task_instance_ids")
+        print(f"Successfully populated {len(rows)} alert_ids")
 
     except Exception:
         conn.rollback()
@@ -64,4 +66,4 @@ def populate_task_instance_ids():
 
 
 if __name__ == "__main__":
-    populate_task_instance_ids()
+    populate_ids()

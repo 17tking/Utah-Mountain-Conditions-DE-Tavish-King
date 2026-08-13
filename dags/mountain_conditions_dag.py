@@ -91,7 +91,7 @@ with DAG(
 
     load_alerts_task = BashOperator(
         task_id="load_alerts_silver",
-        bash_command='psql -h host.docker.internal -U tavishk17 -d utahmountains -f "/opt/airflow/scripts/SQL/Silver/load_ow_alerts_silver.sql"',
+        bash_command='psql -h host.docker.internal -U tavishk17 -d utahmountains -f "/opt/airflow/scripts/SQL/Silver/load_alerts_silver.sql"',
         env={'PGPASSWORD': '{{ var.value.password }}'}
     )
 
