@@ -6,12 +6,12 @@ import os
 import json
 import time
 import copy
-from utils import get_summits, log_api_call, call_api_with_retry  # custom function to retrieve summits list
+from utils import get_summits, log_api_call, call_api_with_retry, generate_id  # custom function to retrieve summits list
  
 # ===============================================================================================
 # This script extracts daily weather forecasts for all summits listed from the Open-Meteo API.
-# It stores the raw JSON response along with basic metadata (latitude, longitude, elevation, timezone)
-# in the `bronze.openmeteo_daily` PostgreSQL table.
+# It stores the raw JSON response along with basic metadata (latitude, longitude, elevation)
+# in the `bronze.daily_stg` PostgreSQL table.
 #
 # This script is intended to run daily @ 1am to maintain up-to-date forecast data.
 # =================================================================================================
@@ -28,7 +28,7 @@ def main():
     meteo_url = "https://api.open-meteo.com/v1/forecast"
  
     # Base parameters for daily forecast. Latitude and longitude will be set per summit.
-    base_params = {
+    daily_params = {
         "latitude": None,
         "longitude": None,
         "daily": [
@@ -72,7 +72,7 @@ def main():
     for s in summits:
         # Deep copy base params so each summit has its own lat/lon
         # and the shared "daily" list is not mutated
-        params = copy.deepcopy(base_params)
+        params = copy.deepcopy(daily_params)
         params["latitude"] = s["mountain_latitude"]
         params["longitude"] = s["mountain_longitude"]
  
@@ -96,49 +96,45 @@ def main():
             print(f"Response: {r.text}")
             failed_summits.append(s["mountain_id"])
             continue
- 
+
+        # Generate ID for daily_id field
+        daily_id = generate_id()
+
         # Parse JSON response
-        raw_json = r.json()
+        daily_json = r.json()
  
         # Extract basic metadata for convenience
-        latitude = raw_json.get("latitude")
-        longitude = raw_json.get("longitude")
-        measured_at_m = raw_json.get("elevation")
-        tz_name = raw_json.get("timezone")
-        tz_abbrev = raw_json.get("timezone_abbreviation")
-        utc_offset = raw_json.get("utc_offset_seconds")
+        daily_latitude = daily_json.get("latitude")
+        daily_longitude = daily_json.get("longitude")
+        measured_at = daily_json.get("elevation")
  
         # Record ingestion time in UTC
-        pulled_at = datetime.now(timezone.utc).isoformat()
+        create_date = datetime.now(timezone.utc).isoformat()
  
         # Append as tuple for batch insert
         # Note: raw_json must be serialized to JSON string for PostgreSQL JSONB column
         rows.append((
+            daily_id,
             s["mountain_id"],
-            latitude,
-            longitude,
-            measured_at_m,
-            tz_name,
-            tz_abbrev,
-            utc_offset,
-            pulled_at,
-            json.dumps(raw_json)
+            daily_latitude,
+            daily_longitude,
+            measured_at,
+            create_date,
+            json.dumps(daily_json)
         ))
  
     # ------------------------------------
     # Insert into PostgreSQL Bronze Table
     # ------------------------------------
     insert_daily_query = """
-        INSERT INTO bronze.openmeteo_daily (
-            mtn_id,
-            latitude,
-            longitude,
-            measured_at_m,
-            timezone,
-            timezone_abbreviation,
-            utc_offset_seconds,
-            pulled_at,
-            daily_forecast
+        INSERT INTO bronze.daily_stg (
+            daily_id,
+            mountain_id,
+            daily_latitude,
+            daily_longitude,
+            measured_at,
+            create_date,
+            daily_json
         ) VALUES %s
     """
  
@@ -154,7 +150,7 @@ def main():
     try:
         execute_values(cur, insert_daily_query, rows)
         conn.commit()
-        print(f"Yeehaw! {cur.rowcount} rows inserted into bronze.openmeteo_daily")
+        print(f"Yeehaw! {cur.rowcount} rows inserted into bronze.daily_stg")
     except Exception as e:
         conn.rollback()
         print("=" * 50)

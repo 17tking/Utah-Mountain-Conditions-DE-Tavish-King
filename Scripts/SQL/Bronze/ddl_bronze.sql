@@ -22,7 +22,7 @@ Warning:
 
 
 -- -------------------------
--- bronze.wiki_mtns
+-- bronze.mountains_stg
 -- -------------------------
 drop table if exists bronze.mountains_stg cascade;
 
@@ -50,7 +50,7 @@ drop table if exists bronze.alerts_stg cascade;
 
 create table bronze.alerts_stg (
     alert_id         VARCHAR(24)   PRIMARY KEY,
-    mountain_id      INT           REFERENCES bronze.mountains(mountain_id),
+    mountain_id      INT           REFERENCES bronze.mountains_stg(mountain_id),
     alert_latitude   FLOAT         NOT NULL,
     alert_longitude  FLOAT         NOT NULL,
     create_date      TIMESTAMP     NOT NULL,
@@ -68,25 +68,23 @@ on bronze.alerts_stg (
 
 
 -- -------------------------
--- bronze.openmeteo_daily
+-- bronze.daily_stg
 -- -------------------------
-drop table if exists bronze.openmeteo_daily cascade;
+drop table if exists bronze.daily_stg cascade;
 
-create table bronze.openmeteo_daily (
-    mtn_id                  INT             REFERENCES bronze.wiki_mtns(mtn_id),
-    latitude                FLOAT           NOT NULL,
-    longitude               FLOAT           NOT NULL,
-    measured_at_m           INT,
-    timezone                VARCHAR(100),
-    timezone_abbreviation   VARCHAR(5),
-    utc_offset_seconds      INT,
-    pulled_at               TIMESTAMPTZ     NOT NULL,
-    daily_forecast          JSONB           NOT NULL
+create table bronze.daily_stg (
+    daily_id                VARCHAR(24)     PRIMARY KEY,
+    mountain_id             INT             REFERENCES bronze.mountains_stg(mountain_id),
+    daily_latitude          FLOAT           NOT NULL,
+    daily_longitude         FLOAT           NOT NULL,
+    measured_at             INT,
+    create_date             TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
+    daily_json              JSONB           NOT NULL
 );
 
 -- Unique index to prevent duplicate ingestion runs
 create unique index if not exists bronze_openmeteo_daily_unique_idx
-on bronze.openmeteo_daily (mtn_id, pulled_at);
+on bronze.daily_stg (mountain_id, create_date);
 
 
 -- -------------------------

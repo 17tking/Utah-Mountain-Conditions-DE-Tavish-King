@@ -56,7 +56,7 @@ create table silver.weathercodes (
 
 
 -- ----------------------------
--- silver.openweather_alerts
+-- silver.alerts
 -- ----------------------------
 drop table if exists silver.alerts cascade;
 
@@ -74,58 +74,58 @@ create table silver.alerts (
 
 
 -- ----------------------------
--- silver.openmeteo_daily
+-- silver.daily
 -- ----------------------------
-drop table if exists silver.openmeteo_daily cascade;
+drop table if exists silver.daily cascade;
 
-create table silver.openmeteo_daily (
-    mtn_id                                  INT             NOT NULL REFERENCES silver.wiki_mtns(mtn_id),
-    measured_at_m                           INT,
-    pulled_at                               TIMESTAMPTZ,
-    dly_time                                DATE            NOT NULL,
-    dly_sunset                              TIMESTAMPTZ,
-    dly_sunrise                             TIMESTAMPTZ,
-    dly_weather_code                        INT             REFERENCES silver.weathercodes(weather_code),
-    dly_rain_sum_mm                         NUMERIC(10,2)   CHECK (dly_rain_sum_mm >= 0),
-    dly_showers_sum_mm                      NUMERIC(10,2)   CHECK (dly_showers_sum_mm >= 0),
-    dly_snowfall_sum_cm                     NUMERIC(10,2)   CHECK (dly_snowfall_sum_cm >= 0),
-    dly_uv_index_max                        NUMERIC(5,2),
-    dly_visibility_max_m                    NUMERIC(10,2),
-    dly_visibility_min_m                    NUMERIC(10,2),
-    dly_visibility_mean_m                   NUMERIC(10,2),
-    dly_cloud_cover_max_pct                 INT             CHECK (dly_cloud_cover_max_pct BETWEEN 0 AND 100),
-    dly_cloud_cover_min_pct                 INT             CHECK (dly_cloud_cover_min_pct BETWEEN 0 AND 100),
-    dly_cloud_cover_mean_pct                INT             CHECK (dly_cloud_cover_mean_pct BETWEEN 0 AND 100),
-    dly_dew_point_2m_max_celsius            NUMERIC(5,2),
-    dly_dew_point_2m_min_celsius            NUMERIC(5,2),
-    dly_dew_point_2m_mean_celsius           NUMERIC(5,2),
-    dly_daylight_duration_seconds           NUMERIC(10,2)   CHECK (dly_daylight_duration_seconds >= 0),
-    dly_precipitation_sum_mm                NUMERIC(10,2)   CHECK (dly_precipitation_sum_mm >= 0),
-    dly_precipitation_hours                 NUMERIC(10,2)   CHECK (dly_precipitation_hours >= 0),
-    dly_precipitation_probability_max_pct   INT             CHECK (dly_precipitation_probability_max_pct BETWEEN 0 AND 100),
-    dly_precipitation_probability_min_pct   INT             CHECK (dly_precipitation_probability_min_pct BETWEEN 0 AND 100),
-    dly_precipitation_probability_mean_pct  INT             CHECK (dly_precipitation_probability_mean_pct BETWEEN 0 AND 100),
-    dly_sunshine_duration_seconds           NUMERIC(10,2)   CHECK (dly_sunshine_duration_seconds >= 0),
-    dly_temperature_2m_max_celsius          NUMERIC(5,2),
-    dly_temperature_2m_min_celsius          NUMERIC(5,2),
-    dly_temperature_2m_mean_celsius         NUMERIC(5,2),
-    dly_apparent_temperature_max_celsius    NUMERIC(5,2),
-    dly_apparent_temperature_min_celsius    NUMERIC(5,2),
-    dly_apparent_temperature_mean_celsius   NUMERIC(5,2),
-    dly_wind_gusts_10m_max_kmh              NUMERIC(10,2),
-    dly_wind_gusts_10m_min_kmh              NUMERIC(10,2),
-    dly_wind_gusts_10m_mean_kmh             NUMERIC(10,2),
-    dly_wind_speed_10m_max_kmh              NUMERIC(10,2),
-    dly_wind_speed_10m_min_kmh              NUMERIC(10,2),
-    dly_wind_speed_10m_mean_kmh             NUMERIC(10,2),
-    dly_wind_direction_10m_dominant         INT,
-    dly_surface_pressure_max_hpa            NUMERIC(10,2),
-    dly_surface_pressure_min_hpa            NUMERIC(10,2),
-    dly_surface_pressure_mean_hpa           NUMERIC(10,2),
-    dly_relative_humidity_2m_max_pct        INT             CHECK (dly_relative_humidity_2m_max_pct BETWEEN 0 AND 100),
-    dly_relative_humidity_2m_min_pct        INT             CHECK (dly_relative_humidity_2m_min_pct BETWEEN 0 AND 100),
-    dly_relative_humidity_2m_mean_pct       INT             CHECK (dly_relative_humidity_2m_mean_pct BETWEEN 0 AND 100),
-    PRIMARY KEY (mtn_id, dly_time)
+create table silver.daily (
+    daily_id                            VARCHAR(24)     PRIMARY KEY,
+    mountain_id                         INT             NOT NULL REFERENCES silver.mountains(mountain_id),
+    measured_at                         INT,
+    create_date                         TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
+    forecast_date                       DATE            NOT NULL,
+    sunset                              TIMESTAMPTZ,
+    sunrise                             TIMESTAMPTZ,
+    weather_code                        INT             REFERENCES silver.weathercodes(weather_code),
+    rain_sum_mm                         NUMERIC(10,2)   CHECK (rain_sum_mm >= 0),
+    showers_sum_mm                      NUMERIC(10,2)   CHECK (showers_sum_mm >= 0),
+    snowfall_sum_cm                     NUMERIC(10,2)   CHECK (snowfall_sum_cm >= 0),
+    uv_index_max                        NUMERIC(5,2),
+    visibility_max_m                    NUMERIC(10,2),
+    visibility_min_m                    NUMERIC(10,2),
+    visibility_mean_m                   NUMERIC(10,2),
+    cloud_cover_max_pct                 INT             CHECK (cloud_cover_max_pct BETWEEN 0 AND 100),
+    cloud_cover_min_pct                 INT             CHECK (cloud_cover_min_pct BETWEEN 0 AND 100),
+    cloud_cover_mean_pct                INT             CHECK (cloud_cover_mean_pct BETWEEN 0 AND 100),
+    dew_point_2m_max_celsius            NUMERIC(5,2),
+    dew_point_2m_min_celsius            NUMERIC(5,2),
+    dew_point_2m_mean_celsius           NUMERIC(5,2),
+    daylight_duration_seconds           NUMERIC(10,2)   CHECK (daylight_duration_seconds >= 0),
+    precipitation_sum_mm                NUMERIC(10,2)   CHECK (precipitation_sum_mm >= 0),
+    precipitation_hours                 NUMERIC(10,2)   CHECK (precipitation_hours >= 0),
+    precipitation_probability_max_pct   INT             CHECK (precipitation_probability_max_pct BETWEEN 0 AND 100),
+    precipitation_probability_min_pct   INT             CHECK (precipitation_probability_min_pct BETWEEN 0 AND 100),
+    precipitation_probability_mean_pct  INT             CHECK (precipitation_probability_mean_pct BETWEEN 0 AND 100),
+    sunshine_duration_seconds           NUMERIC(10,2)   CHECK (sunshine_duration_seconds >= 0),
+    temperature_2m_max_celsius          NUMERIC(5,2),
+    temperature_2m_min_celsius          NUMERIC(5,2),
+    temperature_2m_mean_celsius         NUMERIC(5,2),
+    apparent_temperature_max_celsius    NUMERIC(5,2),
+    apparent_temperature_min_celsius    NUMERIC(5,2),
+    apparent_temperature_mean_celsius   NUMERIC(5,2),
+    wind_gusts_10m_max_kmh              NUMERIC(10,2),
+    wind_gusts_10m_min_kmh              NUMERIC(10,2),
+    wind_gusts_10m_mean_kmh             NUMERIC(10,2),
+    wind_speed_10m_max_kmh              NUMERIC(10,2),
+    wind_speed_10m_min_kmh              NUMERIC(10,2),
+    wind_speed_10m_mean_kmh             NUMERIC(10,2),
+    wind_direction_10m_dominant         INT,
+    surface_pressure_max_hpa            NUMERIC(10,2),
+    surface_pressure_min_hpa            NUMERIC(10,2),
+    surface_pressure_mean_hpa           NUMERIC(10,2),
+    relative_humidity_2m_max_pct        INT             CHECK (relative_humidity_2m_max_pct BETWEEN 0 AND 100),
+    relative_humidity_2m_min_pct        INT             CHECK (relative_humidity_2m_min_pct BETWEEN 0 AND 100),
+    relative_humidity_2m_mean_pct       INT             CHECK (relative_humidity_2m_mean_pct BETWEEN 0 AND 100)
 );
 
 
