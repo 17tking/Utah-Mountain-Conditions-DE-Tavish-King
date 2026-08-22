@@ -69,7 +69,10 @@ create table silver.alerts (
     start_time       TIMESTAMPTZ     NOT NULL,
     end_time         TIMESTAMPTZ     NOT NULL CHECK (end_time >= start_time),
     description      TEXT            CHECK (length(description) <= 5000),
-    alert_tags       JSONB
+    alert_tags       JSONB,
+
+    CONSTRAINT openmeteo_alert_unique
+        UNIQUE (mountain_id, event_name, start_time)
 );
 
 
@@ -125,7 +128,10 @@ create table silver.daily (
     surface_pressure_mean_hpa           NUMERIC(10,2),
     relative_humidity_2m_max_pct        INT             CHECK (relative_humidity_2m_max_pct BETWEEN 0 AND 100),
     relative_humidity_2m_min_pct        INT             CHECK (relative_humidity_2m_min_pct BETWEEN 0 AND 100),
-    relative_humidity_2m_mean_pct       INT             CHECK (relative_humidity_2m_mean_pct BETWEEN 0 AND 100)
+    relative_humidity_2m_mean_pct       INT             CHECK (relative_humidity_2m_mean_pct BETWEEN 0 AND 100),
+
+    CONSTRAINT openmeteo_daily_unique
+        UNIQUE (mountain_id, forecast_date)
 );
 
 
