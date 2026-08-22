@@ -1,27 +1,27 @@
 -- Getting the # of alerts for a given mtn. Concatenation of alert types + Min Start Date and Max End Date
 --
-select omd.mtn_id,
-	   wiki_mtns.mtn_name,
-	   wiki_mtns.mtn_range,
-	   omd.dly_time,
-	   alerts.alert_count,
-	   alerts.alert_events,
-	   alerts.alert_start at time zone 'America/Denver' as alert_start,
-	   alerts.alert_end at time zone 'America/Denver' as alert_end
-from silver.openmeteo_daily omd
-left join silver.wiki_mtns on wiki_mtns.mtn_id = omd.mtn_id
+select d.mountain_id,
+	   m.mountain_name,
+	   m.mountain_range,
+	   d.forecast_date,
+	   a.alert_count,
+	   a.event_name,
+	   a.start at time zone 'America/Denver' as start,
+	   a.end at time zone 'America/Denver' as end
+from silver.daily d
+left join silver.mountains m on m.mountain_id = d.mountain_id
 left join 
 (
-	select mtn_id,
+	select mountain_id,
 	count(*) as alert_count,
-	min(alert_start) as alert_start,
-    max(alert_end) as alert_end,
-	string_agg(alert_event, ' | ') as alert_events
-	from silver.openweather_alerts
-	where alert_start <= now() and alert_end >= now()
-	group by mtn_id
-) as alerts on alerts.mtn_id = omd.mtn_id
-where dly_time = current_date
+	min(start_time) as start,
+    max(end_time) as end,
+	string_agg(event_name, ' | ') as event_name
+	from silver.alerts
+	where start_time <= now() and end_time >= now()
+	group by mountain_id
+) as a on a.mountain_id = d.mountain_id
+where forecast_date = current_date
 and {{Mountain}}
-order by mtn_id
+order by mountain_id
 ;
