@@ -25,3 +25,4 @@ add constraint constraint_name PRIMARY KEY (column_name) --must not be NULL
 -- Change Data Type of Column
 alter table table_name
 alter column col_name TYPE new_data_type
+;

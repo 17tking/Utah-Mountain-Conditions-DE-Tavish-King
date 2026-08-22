@@ -73,8 +73,7 @@ on bronze.alerts_stg (
 drop table if exists bronze.daily_stg cascade;
 
 create table bronze.daily_stg (
-    daily_id                VARCHAR(24)     PRIMARY KEY,
-    mountain_id             INT             REFERENCES bronze.mountains_stg(mountain_id),
+    mountain_id             INT             PRIMARY KEY REFERENCES bronze.mountains_stg(mountain_id),
     daily_latitude          FLOAT           NOT NULL,
     daily_longitude         FLOAT           NOT NULL,
     measured_at             INT,

@@ -97,8 +97,6 @@ def main():
             failed_summits.append(s["mountain_id"])
             continue
 
-        # Generate ID for daily_id field
-        daily_id = generate_id()
 
         # Parse JSON response
         daily_json = r.json()
@@ -114,7 +112,6 @@ def main():
         # Append as tuple for batch insert
         # Note: raw_json must be serialized to JSON string for PostgreSQL JSONB column
         rows.append((
-            daily_id,
             s["mountain_id"],
             daily_latitude,
             daily_longitude,
@@ -128,7 +125,6 @@ def main():
     # ------------------------------------
     insert_daily_query = """
         INSERT INTO bronze.daily_stg (
-            daily_id,
             mountain_id,
             daily_latitude,
             daily_longitude,

@@ -11,10 +11,11 @@ Note:
 	latitude, longitude, elevation_m(ft), and timezone are mountain-level attributes
 	stored in silver.mountains and are not repeated here (3NF).
 
+    daily_id has a default constraint that will generate a random uuid. So it will not be in the load script.
+
 */
 
 insert into silver.daily (
-    daily_id,
     mountain_id, 
     measured_at, 
     create_date, 
@@ -63,7 +64,6 @@ insert into silver.daily (
     relative_humidity_2m_mean_pct
 )
 select distinct on (mountain_id, (daily_json -> 'daily' -> 'time' ->> idx)::date)
-    daily_id,
     mountain_id,
     measured_at,
     create_date,

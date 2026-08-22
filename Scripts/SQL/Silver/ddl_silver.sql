@@ -79,7 +79,7 @@ create table silver.alerts (
 drop table if exists silver.daily cascade;
 
 create table silver.daily (
-    daily_id                            VARCHAR(24)     PRIMARY KEY,
+    daily_id                            VARCHAR(24)     PRIMARY KEY DEFAULT left(replace(gen_random_uuid()::text, '-', ''), 24),
     mountain_id                         INT             NOT NULL REFERENCES silver.mountains(mountain_id),
     measured_at                         INT,
     create_date                         TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
