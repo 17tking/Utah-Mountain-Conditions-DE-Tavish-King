@@ -50,9 +50,9 @@ with DAG(
         env={'PGPASSWORD': '{{ var.value.password }}'}
     )
 
-    openmeteo_daily_task = BashOperator(
+    daily_forecast_task = BashOperator(
         task_id="om_daily_etl",
-        bash_command=f'python "{etl_path}/extract_load_openmeteo_daily_forecast.py"'
+        bash_command=f'python "{etl_path}/extract_load_daily_forecast.py"'
     )
 
     openmeteo_hourly_task = BashOperator(
@@ -67,13 +67,13 @@ with DAG(
 
     openweather_alerts_task = BashOperator(
         task_id="ow_alerts_etl",
-        bash_command=f'python "{etl_path}/extract_load_openweather_alerts.py"'
+        bash_command=f'python "{etl_path}/extract_load_alerts.py"'
     )
 
     # LOAD/TRANSFORM TO SILVER LAYER
-    load_daily_task = BashOperator(
-        task_id="load_daily_silver",
-        bash_command='psql -h host.docker.internal -U tavishk17 -d utahmountains -f "/opt/airflow/scripts/SQL/Silver/load_om_daily_silver.sql"',
+    load_daily_forecast_task = BashOperator(
+        task_id="load_daily_forecast_silver",
+        bash_command='psql -h host.docker.internal -U tavishk17 -d utahmountains -f "/opt/airflow/scripts/SQL/Silver/load_daily_forecast_silver.sql"',
         env={'PGPASSWORD': '{{ var.value.password }}'}
     )
     
@@ -100,11 +100,11 @@ with DAG(
     # ====================
 
     # Run Bronze tasks sequentially (prevent hitting the API too hard)
-    master_mountains_task >> load_mountains_task >> openmeteo_daily_task >> openmeteo_hourly_task >> openmeteo_lightning_task >> openweather_alerts_task
+    master_mountains_task >> load_mountains_task >> daily_forecast_task >> openmeteo_hourly_task >> openmeteo_lightning_task >> openweather_alerts_task
     
     # After all bronze loads complete, silver transforms run in parallel
     openweather_alerts_task >> [
-        load_daily_task,
+        load_daily_forecast_task,
         load_hourly_task,
         load_lightning_task,
         load_alerts_task,
