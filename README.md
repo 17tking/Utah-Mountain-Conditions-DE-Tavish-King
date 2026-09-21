@@ -49,6 +49,10 @@ This approach allows the pipeline to safely rerun without creating duplicates wh
 
 ### Insights
 
+<iframe title="Average Gust Speeds on Utah's Most Popular Summits" aria-label="Line chart" id="datawrapper-chart-gyfZa" src="https://datawrapper.dwcdn.net/gyfZa/2/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="438" data-external="1"></iframe>
+
+<script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
+
 ![Wind Gusts](Scripts/R/Plots/gust_speed.png)
 ![Wind Insights](Docs/images/wind_info_insights.jpg)
 *Metabase allows me to visualize wind info that I've collected and cleaned*
