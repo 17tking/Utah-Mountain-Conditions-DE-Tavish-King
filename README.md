@@ -2,6 +2,8 @@
 *Utah's tallest mountain, **King's Peak** (background), stands at an elevation of 4125m (13,528ft)!*
 
 
+*This project has stopped collecting data on my local machine.*
+
 ## Welcome!
 This project demonstrates an end-to-end analytical engineering pipeline that tracks weather conditions across Utah's 50 highest mountain peaks (and more). By pulling real-time forecasts from multiple APIs and transforming them into analytics-ready datasets, my project showcases skills in ETL development, database design, workflow orchestration, statistical analysis, and data visualization. 
 
@@ -27,8 +29,8 @@ The database follows the **multi-layered architecture** isnpired by the medallio
 ### Data
 The complete data catalog can be found in these markdown files:
 
-- [Bronze Schema](Docs/diagrams/bronze_schema.md)
-- [Silver Schema](Docs/diagrams/silver_schema.md)
+- [Bronze Schema](Docs/diagrams/bronze_schema.md) *deprecated*
+- [Silver Schema](Docs/diagrams/silver_schema.md) *deprecated*
 
 ### Incremental Logic
 All bronze-to-silver transformations use incremental processing to efficiently handle new data while preventing duplicates. The pipeline compares the `pulled_at` timestamp from bronze against the maximum `pulled_at` in silver using a `>` filter, ensuring no records are missed when multiple pulls share the same timestamp.
@@ -47,7 +49,7 @@ This approach allows the pipeline to safely rerun without creating duplicates wh
 
 ### Insights
 
-![Wind Gusts](Scripts/R/Plots/wind_comparison.png)
+![Wind Gusts](Scripts/R/Plots/gust_speed.png)
 ![Wind Insights](Docs/images/wind_info_insights.jpg)
 *Metabase allows me to visualize wind info that I've collected and cleaned*
 
@@ -67,8 +69,6 @@ This approach allows the pipeline to safely rerun without creating duplicates wh
 **R**: Statistical analysis and visualizations.
 
 **Git/GitHub**: Version control and project documentation.
-
-## Get Started
 
 
 ## Repository Structure
