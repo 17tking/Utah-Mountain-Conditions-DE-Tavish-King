@@ -49,6 +49,7 @@ This approach allows the pipeline to safely rerun without creating duplicates wh
 
 ### Insights
 
+![Map](Docs/images/mountain_map.png)
 ![Wind Gusts](Scripts/R/Plots/gust_speed.png)
 
 
