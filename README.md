@@ -50,8 +50,6 @@ This approach allows the pipeline to safely rerun without creating duplicates wh
 ### Insights
 
 ![Wind Gusts](Scripts/R/Plots/gust_speed.png)
-![Wind Insights](Docs/images/wind_info_insights.jpg)
-*Metabase allows me to visualize wind info that I've collected and cleaned*
 
 
 ## Tools & Technologies
