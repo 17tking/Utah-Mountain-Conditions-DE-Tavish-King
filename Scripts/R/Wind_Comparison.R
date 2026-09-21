@@ -28,29 +28,36 @@ wind_data <- as.data.frame(dbGetQuery(con,
                         "
   SELECT
         omh.mtn_id,
-		    wm.mtn_name,
+		    m.mountain_name,
         omh.hrly_time::time,
         ROUND(AVG(omh.hrly_wind_speed_10m_kmh * 0.621371),2) AS avg_wind_speed,
         ROUND(AVG(omh.hrly_wind_gusts_10m_kmh * 0.621371),2) AS avg_gust_speed,
         ROUND(AVG(omh.hrly_wind_gusts_10m_kmh - omh.hrly_wind_speed_10m_kmh)* 0.621371,2) AS avg_gust_diff,
         ROUND(AVG(omh.hrly_wind_gusts_10m_kmh * 0.621371 / NULLIF(omh.hrly_wind_speed_10m_kmh* 0.621371, 0)), 2) AS avg_gust_factor
   FROM silver.openmeteo_hourly omh
-	LEFT JOIN silver.wiki_mtns wm on omh.mtn_id = wm.mtn_id
+	LEFT JOIN silver.mountains m on omh.mtn_id = m.mountain_id
   WHERE omh.hrly_wind_speed_10m_kmh IS NOT NULL
     AND omh.hrly_wind_gusts_10m_kmh IS NOT NULL
     -- filter out near-zero wind hours where gust factor is noisy/meaningless
     AND omh.hrly_wind_speed_10m_kmh > 2
 	  AND omh.mtn_id in (1,52)
-	GROUP BY omh.mtn_id, omh.hrly_time::time, wm.mtn_name
+	GROUP BY omh.mtn_id, omh.hrly_time::time, m.mountain_name
 	ORDER BY omh.mtn_id asc, omh.hrly_time::time asc;
                         "))
 
 wind_data <- wind_data %>% 
   mutate(hrly_time = hour(hrly_time),
-         mtn_name = case_when(
-           mtn_name == "Mount Timpanogos" ~ "Mt Timp",
-           mtn_name == "Kings Peak" ~ "Kings Peak"
+         mountain_name = case_when(
+           mountain_name == "Mount Timpanogos" ~ "Mt Timp",
+           mountain_name == "Kings Peak" ~ "Kings Peak"
          ))
+
+wind_data_wide <- wind_data |> 
+  pivot_wider(
+    id_cols = hrly_time,
+    names_from = mountain_name,
+    values_from = avg_gust_speed
+  )
 
 #-----------------
 # Comparison Plot
@@ -78,7 +85,7 @@ ggplot()+
             aes(
               x = hrly_time,
               y = avg_gust_speed,
-              color = mtn_name
+              color = mountain_name
             ),
             linewidth = 1.25)+
   geom_text(
@@ -86,8 +93,8 @@ ggplot()+
     aes(
       x = hrly_time,
       y = avg_gust_speed,
-      color = mtn_name,
-      label = mtn_name),
+      color = mountain_name,
+      label = mountain_name),
     family = 'Mulish',
     fontface = 'bold',
     size = 1.3,
